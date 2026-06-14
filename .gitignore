@@ -19,6 +19,7 @@ client/.env.local
 
 # Node
 node_modules/
+zafer-abi-layouts/
 
 # Go build artifacts
 *.exe

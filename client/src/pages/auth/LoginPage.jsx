@@ -10,8 +10,8 @@ function LoginPage() {
   const [login, { isLoading }] = useLoginMutation();
 
   const [form, setForm] = useState({
-    email: "admin@mywallet.com",
-    password: "admin123",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState("");
 
