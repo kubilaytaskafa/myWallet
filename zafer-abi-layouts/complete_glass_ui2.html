@@ -1,0 +1,2375 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Complete Glass UI Framework - All Components</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --glass-bg: rgba(69, 90, 100, 0.4);
+        --modal-bg: rgba(69, 90, 100, 0.8);
+        --glass-border: rgba(255, 255, 255, 0.15);
+        --glass-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        --glass-blur: blur(10px);
+        --primary-gradient: linear-gradient(135deg, #28a7d1 0%, #034ba8 100%);
+        --secondary-gradient: linear-gradient(135deg, #3a7bd5 0%, #000046 100%);
+        --success-gradient: linear-gradient(135deg, #66bb6a 0%, #0f7014 100%);
+        --warning-gradient: linear-gradient(135deg, #ffca28 0%, #bd6c02 100%);
+        --danger-gradient: linear-gradient(135deg, #f44336 0%, #a71010 100%);
+        --info-gradient: linear-gradient(135deg, #5ac6f8 0%, #008aca 100%);
+        --dark-gradient: linear-gradient(135deg, #546e7a 0%, #263238 100%);
+        --light-gradient: linear-gradient(135deg, #cfd8dc 0%, #80868a 100%);
+        --text-primary: #fff;
+        --text-secondary: rgba(236, 239, 241, 0.9);
+        --text-muted: rgba(236, 239, 241, 0.7);
+        --glass-shadow: rgba(0, 0, 0, 0.25);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(
+          135deg,
+          #455a64 0%,
+          #37474f 50%,
+          #263238 100%
+        );
+
+        min-height: 100vh;
+        color: var(--text-primary);
+        line-height: 1.6;
+      }
+
+      /* Base Glass Components */
+      .glass-home-container {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 10px;
+        box-shadow: var(--glass-shadow);
+        padding: 1rem;
+        margin: 0.5rem 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .glass-home-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+      }
+
+      .glass-container {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: var(--glass-shadow);
+        padding: 2rem;
+        margin: 1rem auto; /* Üstten ve alttan 1rem boşluk, yatayda ortala */
+        max-width: 1200px; /* İçeriğin maksimum genişliği (isteğe bağlı) */
+        position: relative; /* Z-index'i etkilemek için */
+        z-index: 1;
+      }
+
+      .glass-container::before {
+        content: "";
+        display: block; /* before elementinin görünür olmasını sağlar */
+        height: 1px; /* çizgi kalınlığı */
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+      }
+
+      .full-width-home {
+        width: 100%; /* Tam genişlik */
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Button System */
+      .btn-glass {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        padding: 8px 16px;
+        color: var(--text-primary);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        min-width: fit-content;
+        box-shadow: 0 4px var(--glass-shadow);
+        transform: translateY(0);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      /* Button Sizes */
+      .btn-glass-sm {
+        padding: 7px 12px;
+        font-size: 12px;
+        border-radius: 8px;
+        min-height: 32px;
+      }
+
+      .btn-glass-lg {
+        padding: 12px 24px;
+        font-size: 16px;
+        border-radius: 16px;
+        min-height: 48px;
+      }
+
+      .btn-glass-xl {
+        padding: 15px 30px;
+        font-size: 16px;
+        border-radius: 15px;
+        min-height: 54px;
+      }
+
+      /* Button Variants */
+      .btn-glass-primary {
+        background: var(--primary-gradient);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-secondary {
+        background: var(--secondary-gradient);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-success {
+        background: var(--success-gradient);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-warning {
+        background: var(--warning-gradient);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-danger {
+        background: var(--danger-gradient);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-info {
+        background: var(--info-gradient);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-dark {
+        background: var(--dark-gradient);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-light {
+        background: var(--light-gradient);
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        color: #333;
+      }
+
+      .btn-glass::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .btn-glass:hover::before {
+        left: 100%;
+      }
+
+      .btn-glass:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px var(--glass-shadow);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+
+      .btn-glass:active {
+        transform: translateY(4px);
+        box-shadow: 0 0 var(--glass-shadow);
+      }
+
+      /* Details/Summary */
+      .glass-details {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        box-shadow: var(--glass-shadow);
+      }
+
+      .glass-details summary {
+        padding: 1.2rem 1.5rem;
+        cursor: pointer;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+        list-style: none;
+        position: relative;
+        border-radius: 16px;
+      }
+
+      .glass-details summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .glass-details summary::after {
+        content: "+";
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        font-weight: 300;
+        transition: transform 0.3s ease;
+      }
+
+      .glass-details[open] summary::after {
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .glass-details summary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .glass-details .glass-details-content {
+        padding: 1.5rem;
+        border-top: 1px solid var(--glass-border);
+        background: rgba(0, 0, 0, 0.1);
+        animation: slideDown 0.3s ease-out;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Fieldset */
+      .glass-fieldset {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        position: relative;
+      }
+
+      .glass-fieldset legend {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 600;
+        padding: 0 1rem;
+        margin-left: 1rem;
+      }
+
+      /* Blockquote */
+      .glass-blockquote {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-left: 4px solid #667eea;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        font-style: italic;
+        position: relative;
+      }
+
+      .glass-blockquote::before {
+        content: '"';
+        font-size: 4rem;
+        color: rgba(255, 255, 255, 0.2);
+        position: absolute;
+        top: -0.5rem;
+        left: 1rem;
+        line-height: 1;
+      }
+
+      .glass-blockquote cite {
+        display: block;
+        text-align: right;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      /* Code Blocks */
+      .glass-code {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        position: relative;
+      }
+
+      .glass-code::before {
+        content: "CODE";
+        position: absolute;
+        top: 0.5rem;
+        right: 1rem;
+        font-size: 10px;
+        color: var(--text-muted);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      /* Pre */
+      .glass-pre {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+        white-space: pre-wrap;
+        margin: 1rem 0;
+      }
+
+      /* Address */
+      .glass-address {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        font-style: normal;
+        margin: 1rem 0;
+      }
+
+      /* Abbreviation */
+      .glass-abbr {
+        text-decoration: underline dotted;
+        cursor: help;
+        border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+      }
+
+      /* Mark/Highlight */
+      .glass-mark {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: #000;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+
+      /* Kbd */
+      .glass-kbd {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--glass-border);
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-family: monospace;
+        font-size: 0.9em;
+        box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+      }
+
+      /* Samp */
+      .glass-samp {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+
+      /* Variable */
+      .glass-var {
+        font-style: italic;
+        color: #43e97b;
+        font-weight: 500;
+      }
+
+      /* Form Controls */
+      .glass-form-control {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: var(--text-primary);
+        font-size: 14px;
+        width: 100%;
+        transition: all 0.3s ease;
+      }
+
+      .glass-form-control::placeholder {
+        color: var(--text-muted);
+      }
+
+      .glass-form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .glass-form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .glass-form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      /* Select */
+      .glass-select {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 12px 16px;
+        color: var(--text-primary);
+        font-size: 14px;
+        width: 100%;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 16 16'%3e%3cpath d='m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+      }
+
+      /* Checkbox & Radio */
+      .glass-checkbox,
+      .glass-radio {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 4px;
+        position: relative;
+        cursor: pointer;
+        margin-right: 8px;
+      }
+
+      .glass-radio {
+        border-radius: 50%;
+      }
+
+      .glass-checkbox:checked,
+      .glass-radio:checked {
+        background: var(--primary-gradient);
+      }
+
+      .glass-checkbox:checked::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .glass-radio:checked::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        background: white;
+        border-radius: 50%;
+      }
+
+      /* Range Slider */
+      .glass-range {
+        appearance: none;
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        outline: none;
+      }
+
+      .glass-range::-webkit-slider-thumb {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: var(--primary-gradient);
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Progress Bar */
+      .glass-progress {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        height: 12px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .glass-progress-bar {
+        height: 100%;
+        background: var(--primary-gradient);
+        border-radius: 12px;
+        transition: width 0.6s ease;
+        position: relative;
+      }
+
+      .glass-progress-bar::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        animation: progress-shine 2s infinite;
+      }
+
+      @keyframes progress-shine {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      /* Meter */
+      .glass-meter {
+        appearance: none;
+        width: 100%;
+        height: 20px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .glass-meter::-webkit-meter-bar {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+
+      .glass-meter::-webkit-meter-optimum-value {
+        background: var(--success-gradient);
+        border-radius: 10px;
+      }
+
+      /* Table */
+      .glass-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--glass-shadow);
+      }
+
+      .glass-table th {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .glass-table td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .glass-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      /* Satır Temaları */
+      .glass-table-dark {
+        background-color: rgba(55, 71, 79, 0.5) !important;
+        color: #eceff1;
+      }
+
+      .glass-table-success {
+        background-color: rgba(76, 175, 80, 0.4) !important;
+        color: #e8f5e9;
+      }
+
+      .glass-table-warning {
+        background-color: rgba(255, 202, 40, 0.4) !important;
+        color: #fff8e1;
+      }
+
+      .glass-table-danger {
+        background-color: rgba(244, 67, 54, 0.45) !important;
+        color: #ffebee;
+      }
+
+      .glass-table-info {
+        background-color: rgba(3, 169, 244, 0.4) !important;
+        color: #e1f5fe;
+      }
+
+      .glass-table-primary {
+        background-color: rgba(33, 150, 243, 0.4) !important;
+        color: #e3f2fd;
+      }
+
+      .glass-table-secondary {
+        background-color: rgba(96, 125, 139, 0.4) !important;
+        color: #eceff1;
+      }
+
+      .glass-table-light {
+        background-color: rgba(255, 255, 255, 0.6) !important;
+        color: #263238;
+      }
+
+      .glass-table tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.08); /* genel hover */
+      }
+
+      .glass-table-dark:hover {
+        background-color: rgba(55, 71, 79, 0.65) !important;
+      }
+
+      .glass-table-success:hover {
+        background-color: rgba(76, 175, 80, 0.55) !important;
+      }
+
+      .glass-table-warning:hover {
+        background-color: rgba(255, 202, 40, 0.55) !important;
+      }
+
+      .glass-table-danger:hover {
+        background-color: rgba(244, 67, 54, 0.6) !important;
+      }
+
+      .glass-table-info:hover {
+        background-color: rgba(3, 169, 244, 0.55) !important;
+      }
+
+      .glass-table-primary:hover {
+        background-color: rgba(33, 150, 243, 0.55) !important;
+      }
+
+      .glass-table-secondary:hover {
+        background-color: rgba(96, 125, 139, 0.55) !important;
+      }
+
+      .glass-table-light:hover {
+        background-color: rgba(255, 255, 255, 0.8) !important;
+      }
+
+      /* Figure */
+      .glass-figure {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        text-align: center;
+      }
+
+      .glass-figure img {
+        max-width: 100%;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+      }
+
+      .glass-figcaption {
+        color: var(--text-secondary);
+        font-style: italic;
+        font-size: 0.9rem;
+      }
+
+      /* Navigation */
+      /* --- ENHANCED NAVIGATION --- */
+      .glass-nav {
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 0.75rem 2rem; /* Dikey padding'i biraz azalttık, çünkü butonlar kendi padding'ini alacak */
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .glass-nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* --- MODERNİZE EDİLMİŞ VE ANİMASYONLU LOGO --- */
+      .glass-nav .logo {
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        background-color: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: transparent;
+        background-image: var(--info-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      .glass-nav .logo::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.6s ease-in-out;
+      }
+
+      .glass-nav .logo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        background-color: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .glass-nav .logo:hover::before {
+        left: 100%;
+      }
+
+      .glass-nav ul {
+        display: flex;
+        margin-top: 5px;
+        list-style: none;
+        gap: 0.75rem;
+      }
+
+      /* Navigasyon linklerinin (butonların) temel stili */
+      .glass-nav a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        padding: 0.6rem 1.2rem; /* Butonlara daha dolgun bir görünüm için padding */
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        background: rgba(255, 255, 255, 0.05); /* Çok hafif bir beyaz parlama */
+        border: 1px solid rgba(255, 255, 255, 0.1); /* Çok hafif bir kenarlık */
+      }
+
+      /* Hover ve Aktif durum için birleşik stil */
+      .glass-nav a:hover,
+      .glass-nav a.active {
+        color: var(--text-primary); /* Metin rengini daha belirgin yap */
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3); /* Kenarlığı belirginleştir */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Derinlik hissi için gölge */
+      }
+
+      /* Modal */
+      .glass-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .glass-modal.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .glass-modal-content {
+        background: var(--modal-bg);
+        backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: var(--glass-shadow);
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        transform: scale(0.7);
+        transition: transform 0.3s ease;
+      }
+
+      .glass-modal.show .glass-modal-content {
+        transform: scale(1);
+      }
+      /* Buton Stili (Modal'ı Açan) */
+      #openModalBtn {
+        margin-bottom: 1rem; /* Altında boşluk bırakmak için */
+      }
+
+      /* Modal Başlığı */
+      .glass-modal-header {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.2rem;
+        color: white;
+      }
+
+      /* Modal Alt Bölümü (Butonlar) */
+      .glass-modal-footer {
+        padding: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: right;
+        color: white;
+      }
+
+      /* Ortak Stil - Header ve Footer ile uyumlu */
+      .glass-modal-success {
+        background: rgba(102, 187, 106, 0.1);
+        border-color: rgba(102, 187, 106, 0.2);
+      }
+
+      .glass-modal-danger {
+        background: rgba(244, 67, 54, 0.1);
+        border-color: rgba(244, 67, 54, 0.2);
+      }
+
+      .glass-modal-primary {
+        background: rgba(40, 167, 209, 0.1);
+        border-color: rgba(40, 167, 209, 0.2);
+      }
+
+      .glass-modal-warning {
+        background: rgba(255, 202, 40, 0.1);
+        border-color: rgba(255, 202, 40, 0.2);
+      }
+
+      .glass-modal-info {
+        background: rgba(90, 198, 248, 0.1);
+        border-color: rgba(90, 198, 248, 0.2);
+      }
+
+      .glass-modal-dark {
+        background: rgba(84, 110, 122, 0.1);
+        border-color: rgba(84, 110, 122, 0.2);
+      }
+
+      .glass-modal-light {
+        background: rgba(207, 216, 220, 0.1);
+        border-color: rgba(207, 216, 220, 0.2);
+      }
+
+      .glass-modal-title {
+        margin: 0;
+      }
+
+      /* Kapatma Butonu (X işareti) */
+      .glass-modal-close {
+        background: none;
+        border: none;
+        color: #eceff1; /* veya var(--text-primary) */
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .glass-modal-close:hover {
+        color: #ff5252; /* veya var(--danger-gradient) */
+      }
+
+      /* Modal İçeriği */
+      .glass-modal-body {
+        padding: 1rem;
+      }
+
+      /* Utilities */
+      .text-center {
+        text-align: center;
+      }
+      .mb-2 {
+        margin-bottom: 1rem;
+      }
+      .mb-3 {
+        margin-bottom: 1.5rem;
+      }
+      .mb-4 {
+        margin-bottom: 2rem;
+      }
+      .mt-4 {
+        margin-top: 2rem;
+      }
+      .d-flex {
+        display: flex;
+      }
+      .gap-2 {
+        gap: 1rem;
+      }
+      .flex-wrap {
+        flex-wrap: wrap;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+
+      /* Grid */
+      .glass-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -0.5rem;
+      }
+
+      .glass-col {
+        flex: 1;
+        padding: 0.5rem;
+      }
+
+      .glass-col-6 {
+        flex: 0 0 50%;
+        padding: 0.5rem;
+      }
+
+      /* Footer */
+      .glass-footer {
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border-top: 1px solid var(--glass-border);
+        padding: 2rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      .glass-footer-content {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .glass-footer-logo img {
+        max-width: 150px;
+        height: auto;
+      }
+
+      .glass-footer-links,
+      .glass-footer-policies,
+      .glass-footer-social {
+        margin-right: 2rem;
+      }
+
+      .glass-footer-links h4,
+      .glass-footer-policies h4,
+      .glass-footer-social h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+        color: var(--text-primary);
+      }
+
+      .glass-footer-links ul,
+      .glass-footer-policies ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .glass-footer-links li,
+      .glass-footer-policies li {
+        margin-bottom: 0.5rem;
+      }
+
+      .glass-footer-links a,
+      .glass-footer-policies a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .glass-footer-links a:hover,
+      .glass-footer-policies a:hover {
+        color: var(--text-primary);
+      }
+
+      .glass-footer-social .social-icons {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .glass-footer-social .social-icons a {
+        color: var(--text-primary);
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+      }
+
+      .glass-footer-social .social-icons a:hover {
+        color: var(--info-gradient);
+      }
+
+      .glass-footer-bottom {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--glass-border);
+      }
+
+      .carousel-item {
+        width: 100%;
+        height: 600px;
+      }
+
+      .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      /* diger_tag.html'den gelen elementler için stiller */
+
+      .glass-aside {
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        box-shadow: var(--glass-shadow);
+      }
+
+      .glass-aside-primary {
+        background: rgba(40, 167, 209, 0.15);
+        border: 1px solid rgba(40, 167, 209, 0.2);
+        border-left: 4px solid #28a7d1;
+      }
+
+      .glass-aside-secondary {
+        background: rgba(58, 123, 213, 0.15);
+        border: 1px solid rgba(58, 123, 213, 0.2);
+        border-left: 4px solid #3a7bd5;
+      }
+
+      .glass-aside-success {
+        background: rgba(102, 187, 106, 0.15);
+        border: 1px solid rgba(102, 187, 106, 0.2);
+        border-left: 4px solid #66bb6a;
+      }
+
+      .glass-aside-warning {
+        background: rgba(255, 202, 40, 0.15);
+        border: 1px solid rgba(255, 202, 40, 0.2);
+        border-left: 4px solid #ffca28;
+      }
+
+      .glass-aside-danger {
+        background: rgba(244, 67, 54, 0.15);
+        border: 1px solid rgba(244, 67, 54, 0.2);
+        border-left: 4px solid #f44336;
+      }
+
+      .glass-aside-info {
+        background: rgba(90, 198, 248, 0.15);
+        border: 1px solid rgba(90, 198, 248, 0.2);
+        border-left: 4px solid #5ac6f8;
+      }
+
+      .glass-aside-dark {
+        background: rgba(84, 110, 122, 0.15);
+        border: 1px solid rgba(84, 110, 122, 0.2);
+        border-left: 4px solid #546e7a;
+      }
+
+      .glass-aside-light {
+        background: rgba(207, 216, 220, 0.15);
+        border: 1px solid rgba(207, 216, 220, 0.2);
+        border-left: 4px solid #cfd8dc;
+      }
+
+      .glass-aside strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      /* video elementi için */
+      .glass-video {
+        width: 100%;
+        max-width: 600px;
+        display: block;
+        margin-top: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
+        overflow: hidden; /* Kenarlıkların videoyu düzgün sarması için */
+      }
+
+      /* --- Sidebar ve Sayfa Yapısı --- */
+      .page-wrapper {
+        display: flex;
+      }
+
+      .glass-sidebar {
+        width: 260px;
+        flex-shrink: 0;
+        height: 100vh;
+        position: sticky;
+        /* top: 87px; */
+        top: 0;
+        margin-top: 15px;
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border-right: 1px solid var(--glass-border);
+        padding: 1.5rem 1rem;
+        z-index: 1500;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        padding: 1.5rem !important; /* !important ile inline stili eziyoruz */
+        margin: 0 !important;
+      }
+
+      .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1.35rem; /* Daha tutarlı */
+        margin-bottom: 1.35rem; /* Daha tutarlı */
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .sidebar-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+
+      .sidebar-close-btn {
+        display: none; /* Sadece mobilde görünecek */
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 2rem;
+        cursor: pointer;
+      }
+
+      .sidebar-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar-nav li a {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 12px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .sidebar-nav li a:hover,
+      .sidebar-nav li a.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        transform: translateX(5px);
+      }
+
+      .sidebar-nav li a i {
+        width: 20px;
+        text-align: center;
+        font-size: 1.1rem;
+      }
+
+      .sidebar-toggle {
+        display: none; /* Varsayılan olarak gizli */
+        position: fixed;
+        top: 1rem; /* glass-nav yüksekliğine göre ayarlanabilir */
+        left: 1rem;
+        z-index: 1600;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        color: var(--text-primary);
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        backdrop-filter: var(--glass-blur);
+      }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1400;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+
+      .sidebar-logout {
+        position: absolute;
+        bottom: 100px;
+        width: 100%;
+        text-align: center;
+      }
+
+      /* --- Duyarlılık (Responsiveness) --- */
+      @media (max-width: 992px) {
+        .glass-sidebar {
+          position: fixed;
+          transform: translateX(-100%); /* Başlangıçta gizli */
+        }
+
+        .glass-sidebar.open {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          padding-top: 4rem !important; /* Hamburger butonuna yer açmak için */
+        }
+
+        .sidebar-toggle,
+        .sidebar-close-btn {
+          display: block;
+        }
+
+        .sidebar-overlay.visible {
+          display: block;
+          opacity: 1;
+        }
+
+        /* Üst navigasyonu mobilde gizleyelim, çünkü sidebar menüsü var */
+        .glass-nav {
+          display: none;
+        }
+      }
+
+      .floating-button {
+        position: fixed;
+        bottom: 20px;
+        background-color: #25d366;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 1000;
+        opacity: 0.8;
+        height: 39px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+      }
+
+      .whatsapp-btn {
+        right: 20px;
+      }
+
+      .scroll-top-btn {
+        background-color: #ff5252;
+        right: 70px;
+        display: none;
+      }
+
+      @media (max-width: 756px) {
+        .whatsapp-btn {
+          right: 55px;
+        }
+        .scroll-top-btn {
+          right: 100px;
+        }
+      }
+
+      .icon {
+        font-size: 24px;
+      }
+
+      /* Responsive Footer */
+      @media (max-width: 768px) {
+        .glass-footer {
+          padding: 1rem;
+        }
+
+        .glass-footer-content {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 1rem;
+        }
+
+        .glass-footer-logo,
+        .glass-footer-links,
+        .glass-footer-policies,
+        .glass-footer-social {
+          margin-right: 0;
+        }
+
+        .glass-footer-links ul,
+        .glass-footer-policies ul {
+          text-align: center;
+        }
+
+        .glass-footer-bottom {
+          margin-top: 1rem;
+        }
+      }
+      /* Responsive */
+      @media (max-width: 768px) {
+        .glass-nav-content {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .glass-container {
+          padding: 1rem;
+        }
+
+        .glass-col,
+        .glass-col-6 {
+          flex: 0 0 100%;
+        }
+      }
+
+      .glass-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        max-width: 10cm;
+        width: 100%;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: rgba(69, 90, 100, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        font-weight: 500;
+        z-index: 9999;
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 0.3s ease, transform 0.5s ease;
+      }
+
+      .glass-alert-success {
+        background: rgba(76, 175, 80, 0.3);
+        border: 1px solid rgba(76, 175, 80, 0.4);
+      }
+
+      .glass-alert-error {
+        background: rgba(244, 67, 54, 0.3);
+        border: 1px solid rgba(244, 67, 54, 0.4);
+      }
+
+      .glass-alert-warning {
+        background: rgba(255, 193, 7, 0.3);
+        border: 1px solid rgba(255, 193, 7, 0.4);
+      }
+
+      .glass-alert-info {
+        background: rgba(33, 150, 243, 0.3);
+        border: 1px solid rgba(33, 150, 243, 0.4);
+      }
+
+      .glass-alert.show {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      /* EKLENECEK CSS */
+      /* --- Glass Loader (Yükleniyor) --- */
+      .glass-loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000; /* Her şeyin üstünde olmalı */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .glass-loader-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .glass-loader-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 2rem;
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: var(--glass-shadow);
+        color: var(--text-primary);
+        font-weight: 500;
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+      }
+
+      .glass-loader-overlay.show .glass-loader-content {
+        transform: scale(1);
+      }
+
+      .glass-loader-content .fas {
+        font-size: 2.5rem; /* İkonu büyütelim */
+      }
+    </style>
+  </head>
+  <body>
+    <button id="scrollTopBtn" class="floating-button scroll-top-btn">
+      <i class="fas fa-arrow-up icon"></i>
+    </button>
+    <!-- WhatsApp -->
+    <a id="whatsappLink" href="#" target="_blank" rel="noopener noreferrer">
+      <button class="floating-button whatsapp-btn">
+        <i class="fab fa-whatsapp icon"></i>
+      </button>
+    </a>
+    <!-- Navigation -->
+    <nav class="glass-nav">
+      <div class="glass-nav-content">
+        <div class="logo">GlassUI Logo</div>
+        <ul>
+          <li><a href="#buttons" class="active">Butonlar</a></li>
+          <!-- "active" class'ı eklendi -->
+          <li><a href="#forms">Form</a></li>
+          <li><a href="#text">Text</a></li>
+          <li><a href="#tables">Tablo</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="page-wrapper">
+      <!-- YENİ SIDEBAR -->
+      <aside class="glass-sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3 class="sidebar-title">Menü</h3>
+          <button class="sidebar-close-btn" id="sidebarCloseBtn">×</button>
+        </div>
+        <ul class="sidebar-nav">
+          <li>
+            <a href="#"><i class="fas fa-home"></i> Ana Sayfa</a>
+          </li>
+          <li>
+            <a href="#otel-rezervasyon"
+              ><i class="fas fa-bed"></i> Rezervasyon</a
+            >
+          </li>
+          <li>
+            <a href="#buttons"><i class="fas fa-toggle-on"></i> Butonlar</a>
+          </li>
+          <li>
+            <a href="#forms"><i class="fas fa-edit"></i> Formlar</a>
+          </li>
+          <li>
+            <a href="#tables"><i class="fas fa-table"></i> Tablolar</a>
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-cogs"></i> Ayarlar</a>
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-question-circle"></i> Yardım</a>
+          </li>
+        </ul>
+        <div class="sidebar-logout">
+          <button class="btn-glass btn-glass-danger w-75">
+            <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+          </button>
+        </div>
+      </aside>
+      <!-- Main Content -->
+      <main class="main-content">
+        <button class="sidebar-toggle" id="sidebarToggleBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <!-- Hero -->
+        <div class="glass-home-container">
+          <div
+            id="carouselExampleIndicators"
+            class="carousel slide"
+            data-ride="carousel"
+          >
+            <!-- Göstergeler (Altındaki küçük noktalar) -->
+            <ol class="carousel-indicators">
+              <li
+                data-target="#carouselExampleIndicators"
+                data-slide-to="0"
+                class="active"
+              ></li>
+              <li
+                data-target="#carouselExampleIndicators"
+                data-slide-to="1"
+              ></li>
+              <li
+                data-target="#carouselExampleIndicators"
+                data-slide-to="2"
+              ></li>
+            </ol>
+            <!-- Carousel İçeriği -->
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="./resim1.jpeg" class="d-block w-100" alt="Resim 1" />
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>Birinci Resim</h5>
+                  <p>Bu birinci resmin açıklamasıdır.</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="./resim2.avif" class="d-block w-100" alt="Resim 2" />
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>İkinci Resim</h5>
+                  <p>Bu ikinci resmin açıklamasıdır.</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="./resim3.avif" class="d-block w-100" alt="Resim 3" />
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>Üçüncü Resim</h5>
+                  <p>Bu üçüncü resmin açıklamasıdır.</p>
+                </div>
+              </div>
+            </div>
+            <!-- Kontroller (Sağ ve Sol Oklar) -->
+            <a
+              class="carousel-control-prev"
+              href="#carouselExampleIndicators"
+              role="button"
+              data-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="sr-only">Önceki</span>
+            </a>
+            <a
+              class="carousel-control-next"
+              href="#carouselExampleIndicators"
+              role="button"
+              data-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="sr-only">Sonraki</span>
+            </a>
+          </div>
+        </div>
+        <!-- Hero -->
+        <div class="glass-home-container text-center">
+          <h1 class="mb-2">Glass UI CSS Efektleri</h1>
+          <p class="mb-4">Tüm HTML elementleri için glass-morphism tasarım</p>
+          <div class="d-flex gap-2 justify-center flex-wrap">
+            <button class="btn-glass btn-glass-primary">Başlayın</button>
+            <button class="btn-glass btn-glass-secondary">Dokümantasyon</button>
+          </div>
+        </div>
+
+        <!-- Buttons Section -->
+        <div class="full-width-home">
+          <div class="glass-container" id="buttons">
+            <h2 class="mb-3">🔘 Button Örnekleri</h2>
+
+            <h4 class="mb-2">Boyutlar</h4>
+            <div class="d-flex gap-2 flex-wrap mb-4">
+              <button class="btn-glass btn-glass-sm btn-glass-primary">
+                Küçük
+              </button>
+              <button class="btn-glass btn-glass-primary">Normal</button>
+              <button class="btn-glass btn-glass-lg btn-glass-primary">
+                Büyük
+              </button>
+              <button class="btn-glass btn-glass-xl btn-glass-primary">
+                Extra Büyük
+              </button>
+            </div>
+
+            <h4 class="mb-2">Tüm Renkler</h4>
+            <div class="d-flex gap-2 flex-wrap mb-4">
+              <button class="btn-glass">Varsayılan</button>
+              <button class="btn-glass btn-glass-primary">Primary</button>
+              <button class="btn-glass btn-glass-secondary">Secondary</button>
+              <button class="btn-glass btn-glass-success">Success</button>
+              <button class="btn-glass btn-glass-warning">Warning</button>
+              <button class="btn-glass btn-glass-danger">Danger</button>
+              <button class="btn-glass btn-glass-info">Info</button>
+              <button class="btn-glass btn-glass-dark">Dark</button>
+              <button class="btn-glass btn-glass-light">Light</button>
+            </div>
+
+            <h4 class="mb-2">İkonlu Butonlar</h4>
+            <div class="d-flex gap-2 flex-wrap mb-4"></div>
+            <div class="d-flex gap-2 flex-wrap">
+              <button class="btn-glass">✓ Onayla</button>
+              <button class="btn-glass btn-glass-danger">✗ İptal</button>
+              <button class="btn-glass btn-glass-warning">⚠ Uyarı</button>
+              <button class="btn-glass btn-glass-info">ℹ Bilgi</button>
+              <button class="btn-glass btn-glass-success">+ Ekle</button>
+              <button class="btn-glass btn-glass-primary">🚀 Başlat</button>
+              <button class="btn-glass btn-glass-secondary">💾 Kaydet</button>
+              <button class="btn-glass btn-glass-dark">🔧 Ayarlar</button>
+            </div>
+
+            <h4 class="mb-2 mt-4">Küçük Butonlar (btn-glass-sm)</h4>
+            <div class="d-flex gap-2 flex-wrap">
+              <button class="btn-glass btn-glass-sm">✓ Onayla</button>
+              <button class="btn-glass btn-glass-sm btn-glass-danger">
+                ✗ İptal
+              </button>
+              <button class="btn-glass btn-glass-sm btn-glass-warning">
+                ⚠ Uyarı
+              </button>
+              <button class="btn-glass btn-glass-sm btn-glass-info">
+                ℹ Bilgi
+              </button>
+              <button class="btn-glass btn-glass-sm btn-glass-success">
+                + Ekle
+              </button>
+              <button class="btn-glass btn-glass-sm btn-glass-primary">
+                🚀 Başlat
+              </button>
+              <button class="btn-glass btn-glass-sm btn-glass-secondary">
+                💾 Kaydet
+              </button>
+              <button class="btn-glass btn-glass-sm btn-glass-dark">
+                🔧 Ayarlar
+              </button>
+            </div>
+
+            <h4 class="mb-1 mt-3">Toastify Butonlar</h4>
+            <div class="d-flex gap-2 flex-wrap mb-2"></div>
+
+            <div class="d-flex gap-2 flex-wrap">
+              <button
+                onclick="showGlassAlert('İşlem başarıyla tamamlandı!', 'fa-check-circle', 'glass-alert-success')"
+                class="btn-glass btn-glass-success"
+              >
+                Başarılı Toast
+              </button>
+
+              <button
+                onclick="showGlassAlert('Bir hata oluştu!', 'fa-times-circle', 'glass-alert-error')"
+                class="btn-glass btn-glass-danger"
+              >
+                Hata Toast
+              </button>
+
+              <button
+                onclick="showGlassAlert('Dikkat! Geri alınamaz.', 'fa-exclamation-triangle', 'glass-alert-warning')"
+                class="btn-glass btn-glass-warning"
+              >
+                Uyarı Toast
+              </button>
+
+              <button
+                onclick="showGlassAlert('Yeni güncelleme mevcut.', 'fa-info-circle', 'glass-alert-info')"
+                class="btn-glass btn-glass-info"
+              >
+                Bilgi Toast
+              </button>
+            </div>
+
+            <h4 class="mb-1 mt-3">Toastify Loader</h4>
+            <div class="d-flex gap-2 flex-wrap mb-2"></div>
+            <div class="d-flex gap-2 flex-wrap">
+              <button id="showLoaderBtn" class="btn-glass btn-glass-dark">
+                Yükleniyor'u Göster
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details/Summary Examples -->
+        <div class="glass-home-container">
+          <h2 class="mb-3">📋 Details/Summary Örnekleri</h2>
+
+          <details class="glass-details">
+            <summary>🔍 Detayları Göster</summary>
+            <div class="glass-details-content">
+              <p>
+                Bu bir <strong>details</strong> elementi örneğidir.
+                Tıkladığınızda içerik açılır ve kapanır.
+              </p>
+              <p>Glassmorphism efekti ile modern bir görünüm sağlar.</p>
+              <button class="btn-glass btn-glass-sm btn-glass-primary">
+                İşlem Yap
+              </button>
+            </div>
+          </details>
+
+          <details class="glass-details">
+            <summary>⚙️ Gelişmiş Ayarlar</summary>
+            <div class="glass-details-content">
+              <div class="glass-form-group">
+                <label class="glass-form-label">Ayar 1</label>
+                <input
+                  type="text"
+                  class="glass-form-control"
+                  placeholder="Değer girin"
+                />
+              </div>
+              <div class="glass-form-group">
+                <label class="glass-form-label">Ayar 2</label>
+                <select class="glass-select">
+                  <option>Seçenek 1</option>
+                  <option>Seçenek 2</option>
+                </select>
+              </div>
+            </div>
+          </details>
+
+          <details class="glass-details">
+            <summary>📊 İstatistikler</summary>
+            <div class="glass-details-content">
+              <div class="glass-row">
+                <div class="glass-col-6">
+                  <h5>Kullanıcılar</h5>
+                  <div class="glass-progress mb-2">
+                    <div class="glass-progress-bar" style="width: 75%"></div>
+                  </div>
+                  <p>1,250 aktif kullanıcı</p>
+                </div>
+                <div class="glass-col-6">
+                  <h5>Performans</h5>
+                  <div class="glass-progress mb-2">
+                    <div class="glass-progress-bar" style="width: 90%"></div>
+                  </div>
+                  <p>%90 başarı oranı</p>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Text Elements -->
+        <div class="glass-container" id="text">
+          <h2 class="mb-3">📝 Metin Elementleri</h2>
+
+          <h4 class="mb-1">Blockquote</h4>
+          <blockquote class="glass-blockquote">
+            <p>
+              "Tasarım sadece nasıl göründüğü ve nasıl hissettirdiği değil,
+              nasıl çalıştığıdır."
+            </p>
+            <cite>— Steve Jobs</cite>
+          </blockquote>
+
+          <h4 class="mb-1">Code Block</h4>
+          <pre class="glass-code"><code>
+function sayHello(name) {
+  console.log('Merhaba, ' + name + '!');
+}
+
+sayHello('Dünya');
+            </code></pre>
+
+          <h4 class="mb-1">Inline Elements</h4>
+          <p>
+            Bu bir
+            <abbr title="HyperText Markup Language" class="glass-abbr"
+              >HTML</abbr
+            >
+            örneğidir. Ayrıca
+            <mark class="glass-mark">vurgulanmış</mark> metinler de
+            kullanabiliriz. Klavye kısayolları için
+            <kbd class="glass-kbd">Ctrl + S</kbd> kullanabilirsiniz. Bir
+            değişkeni ifade etmek için <var class="glass-var">x</var> etiketini
+            kullanırız. Çıktı örneği: <samp class="glass-samp">Merhaba!</samp>
+          </p>
+
+          <h4 class="mb-1">Address</h4>
+          <address class="glass-address">
+            Glass UI Framework Ekibi<br />
+            Örnek Mah. Örnek Sok. No: 123<br />
+            Şehir, Ülke
+          </address>
+        </div>
+
+        <!-- Form Elements -->
+        <div class="glass-home-container" id="forms">
+          <h2 class="mb-3">Form Elemanları</h2>
+
+          <div class="glass-form-group">
+            <label class="glass-form-label" for="name">Ad Soyad</label>
+            <input
+              type="text"
+              id="name"
+              class="glass-form-control"
+              placeholder="Adınızı ve soyadınızı girin"
+            />
+          </div>
+
+          <div class="glass-form-group">
+            <label class="glass-form-label" for="email">E-posta</label>
+            <input
+              type="email"
+              id="email"
+              class="glass-form-control"
+              placeholder="E-posta adresinizi girin"
+            />
+          </div>
+
+          <div class="glass-form-group">
+            <label class="glass-form-label" for="message">Mesaj</label>
+            <textarea
+              id="message"
+              class="glass-form-control"
+              rows="4"
+              placeholder="Mesajınızı yazın"
+            ></textarea>
+          </div>
+
+          <div class="glass-form-group">
+            <label class="glass-form-label" for="country">Ülke</label>
+            <select id="country" class="glass-select">
+              <option>Türkiye</option>
+              <option>Almanya</option>
+              <option>Fransa</option>
+              <option>ABD</option>
+            </select>
+          </div>
+
+          <div class="glass-form-group">
+            <div class="d-flex align-items-center gap-1">
+              <input type="checkbox" id="agree" class="glass-checkbox" />
+              <label for="agree">Kullanım koşullarını kabul ediyorum</label>
+            </div>
+          </div>
+
+          <div class="glass-form-group">
+            <div class="d-flex align-items-center gap-1">
+              <input type="radio" id="male" name="gender" class="glass-radio" />
+              <label for="male">Erkek</label>
+            </div>
+            <div class="d-flex align-items-center gap-1">
+              <input
+                type="radio"
+                id="female"
+                name="gender"
+                class="glass-radio"
+              />
+              <label for="female">Kadın</label>
+            </div>
+          </div>
+
+          <div class="glass-form-group">
+            <label class="glass-form-label" for="volume">Ses Seviyesi</label>
+            <input
+              type="range"
+              id="volume"
+              class="glass-range"
+              min="0"
+              max="100"
+              value="50"
+            />
+          </div>
+
+          <button class="btn-glass btn-glass-primary">Gönder</button>
+        </div>
+
+        <!-- Table Example -->
+        <div class="glass-container" id="tables">
+          <h2 class="mb-3">Tablo Örneği</h2>
+          <table class="glass-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Ad</th>
+                <th>Soyad</th>
+                <th>Kullanıcı Adı</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="glass-table-success">
+                <td>1</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Figure Example -->
+        <div class="glass-container">
+          <h2 class="mb-3">Resim Örneği</h2>
+
+          <figure class="glass-figure">
+            <img src="./nature.jpg" alt="Doğa Manzarası" />
+            <figcaption class="glass-figcaption">
+              Güzel bir doğa manzarası.
+            </figcaption>
+          </figure>
+        </div>
+
+        <!-- Modal Örneği-->
+        <div class="glass-container" id="modals">
+          <button
+            id="openModalBtn"
+            class="btn-glass btn-glass-sm btn-glass-primary"
+          >
+            Modalı Aç
+          </button>
+
+          <div id="myModal" class="glass-modal">
+            <div class="glass-modal-content">
+              <div class="glass-modal-header glass-modal-primary">
+                <h5 class="glass-modal-title">Modal Başlığı</h5>
+                <button
+                  type="button"
+                  class="glass-modal-close"
+                  id="closeModalBtn"
+                >
+                  ×
+                </button>
+              </div>
+              <div class="glass-modal-body">
+                <p>Bu bir modal örneğidir.</p>
+                <p>Bu bir modal örneğidir.</p>
+                <p>Bu bir modal örneğidir.</p>
+                <p>İçeriği buraya ekleyebilirsiniz.</p>
+              </div>
+              <div class="glass-modal-footer glass-modal-primary">
+                <button
+                  type="button"
+                  class="btn-glass btn-glass-sm btn-glass-success"
+                >
+                  Kaydet
+                </button>
+                <button
+                  type="button"
+                  class="btn-glass btn-glass-sm btn-glass-secondary"
+                  id="cancelModalBtn"
+                >
+                  İptal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Otel Rezervasyon Bölümü -->
+        <div class="glass-home-container" id="otel-rezervasyon">
+          <h2 class="mb-3">🌿 Mavi Kıyı Butik Otel</h2>
+
+          <aside class="glass-aside glass-aside-warning">
+            <strong>Bilgi:</strong> Erken rezervasyonlarda
+            <abbr title="Yüzde" class="glass-abbr">%</abbr>10 indirim uygulanır!
+          </aside>
+
+          <!-- Otel Tanıtım Alanı -->
+          <div class="glass-container mb-4">
+            <h3 class="mb-2">Otelimizden Manzaralar</h3>
+            <p>
+              Sahil boyunca uzanan yürüyüş yolları ve
+              <abbr title="Her Şey Dahil" class="glass-abbr">HŞD</abbr>
+              konseptiyle Mavi Kıyı Otel, size unutulmaz bir tatil vaat ediyor.
+            </p>
+            <video controls class="glass-video">
+              <source src="tanitim.mp4" type="video/mp4" />
+              <source src="tanitim.webm" type="video/webm" />
+              Tarayıcınız video öğesini desteklemiyor.
+            </video>
+          </div>
+
+          <!-- Rezervasyon Formu -->
+          <form>
+            <div class="glass-row">
+              <div class="glass-col-6">
+                <fieldset class="glass-fieldset">
+                  <legend>Misafir Bilgileri</legend>
+                  <div class="glass-form-group">
+                    <label class="glass-form-label" for="otel-name"
+                      >Ad Soyad:</label
+                    >
+                    <input
+                      type="text"
+                      id="otel-name"
+                      name="name"
+                      class="glass-form-control"
+                      required
+                    />
+                  </div>
+                  <div class="glass-form-group">
+                    <label class="glass-form-label" for="otel-email"
+                      >E-posta:</label
+                    >
+                    <input
+                      type="email"
+                      id="otel-email"
+                      name="email"
+                      class="glass-form-control"
+                      required
+                    />
+                  </div>
+                </fieldset>
+              </div>
+              <div class="glass-col-6">
+                <fieldset class="glass-fieldset">
+                  <legend>Rezervasyon Bilgileri</legend>
+                  <div class="glass-form-group">
+                    <label class="glass-form-label" for="checkin"
+                      >Giriş Tarihi:</label
+                    >
+                    <input
+                      type="date"
+                      id="checkin"
+                      name="checkin"
+                      class="glass-form-control"
+                    />
+                  </div>
+                  <div class="glass-form-group">
+                    <label class="glass-form-label" for="checkout"
+                      >Çıkış Tarihi:</label
+                    >
+                    <input
+                      type="date"
+                      id="checkout"
+                      name="checkout"
+                      class="glass-form-control"
+                    />
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-glass btn-glass-primary mt-4">
+              Rezervasyonu Gönder
+            </button>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <footer class="glass-footer">
+      <div class="glass-footer-content">
+        <div class="glass-footer-logo">
+          <img src="./logo.png" alt="Firma Logosu" />
+        </div>
+        <div class="glass-footer-links">
+          <h4>Kurumsal</h4>
+          <ul>
+            <li><a href="#">Hakkımızda</a></li>
+            <li><a href="#">Hizmetlerimiz</a></li>
+            <li><a href="#">Projelerimiz</a></li>
+            <li><a href="#">Ekibimiz</a></li>
+            <li><a href="#">İletişim</a></li>
+          </ul>
+        </div>
+        <div class="glass-footer-policies">
+          <h4>Politikalar</h4>
+          <ul>
+            <li><a href="#">Gizlilik Politikası</a></li>
+            <li><a href="#">Kullanım Koşulları</a></li>
+            <li><a href="#">Çerez Politikası</a></li>
+            <li><a href="#">KVKK Aydınlatma Metni</a></li>
+          </ul>
+        </div>
+        <div class="glass-footer-social">
+          <h4>Bizi Takip Edin</h4>
+          <div class="social-icons">
+            <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="glass-footer-bottom">
+        <p>© 2024 Glass UI Framework. Tüm hakları saklıdır.</p>
+      </div>
+    </footer>
+    <div id="glassAlert" class="glass-alert">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span id="glassAlertText">Yükleniyor...</span>
+    </div>
+    <!-- EKLENECEK HTML -->
+    <div id="glassLoader" class="glass-loader-overlay">
+      <div class="glass-loader-content">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span id="glassLoaderText">Yükleniyor...</span>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script
+    src="https://kit.fontawesome.com/a076d05399.js"
+    crossorigin="anonymous"
+  ></script>
+
+  <script>
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const cancelModalBtn = document.getElementById("cancelModalBtn");
+    const modal = document.getElementById("myModal");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
+    const sidebarCloseBtn = document.getElementById("sidebarCloseBtn");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+    openModalBtn.addEventListener("click", () => {
+      modal.classList.add("show");
+    });
+
+    closeModalBtn.addEventListener("click", () => {
+      modal.classList.remove("show");
+    });
+
+    cancelModalBtn.addEventListener("click", () => {
+      modal.classList.remove("show");
+    });
+
+    window.addEventListener("click", (event) => {
+      if (event.target == modal) {
+        modal.classList.remove("show");
+      }
+    });
+
+    // Sidebar'ı açan fonksiyon
+    const openSidebar = () => {
+      sidebar.classList.add("open");
+      sidebarOverlay.classList.add("visible");
+    };
+
+    // Sidebar'ı kapatan fonksiyon
+    const closeSidebar = () => {
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("visible");
+    };
+
+    sidebarToggleBtn.addEventListener("click", openSidebar);
+    sidebarCloseBtn.addEventListener("click", closeSidebar);
+    sidebarOverlay.addEventListener("click", closeSidebar);
+  </script>
+  <script>
+    // Sabitlerden telefon numarasını alıyoruz
+    const footerBilgi = {
+      ceptel: "05321234567", // Buraya kendi numaranı gir
+    };
+
+    function formatPhoneNumber(phone) {
+      let formatted = phone.replace(/\D/g, "");
+      if (formatted.startsWith("0")) {
+        formatted = formatted.substring(1);
+      }
+      if (!formatted.startsWith("90")) {
+        formatted = "90" + formatted;
+      }
+      return formatted;
+    }
+
+    // Buton konumunu ayarla
+    function updateButtonPositions() {
+      const width = window.innerWidth;
+      const scrollBtn = document.getElementById("scrollTopBtn");
+      if (width < 756) {
+        scrollBtn.style.right = "100px";
+      } else {
+        scrollBtn.style.right = "70px";
+      }
+    }
+
+    // Scroll görünürlüğü
+    window.addEventListener("scroll", () => {
+      const scrollBtn = document.getElementById("scrollTopBtn");
+      if (window.scrollY > 80) {
+        scrollBtn.style.display = "block";
+      } else {
+        scrollBtn.style.display = "none";
+      }
+    });
+
+    // Yukarı dön
+    document.getElementById("scrollTopBtn").addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // WhatsApp linkini ayarla
+    const formattedPhone = formatPhoneNumber(footerBilgi.ceptel);
+    document.getElementById(
+      "whatsappLink"
+    ).href = `https://wa.me/${formattedPhone}`;
+
+    // Başlangıçta ayarla
+    updateButtonPositions();
+    window.addEventListener("resize", updateButtonPositions);
+
+    function showGlassAlert(
+      message,
+      iconClass = "fa-spinner fa-spin",
+      toastClass = "glass-alert-success",
+      duration = 3000
+    ) {
+      const alertBox = document.getElementById("glassAlert");
+      const alertText = document.getElementById("glassAlertText");
+      alertBox.className = "glass-alert";
+      alertBox.classList.add(toastClass, "show");
+      const iconEl = alertBox.querySelector("i");
+      if (iconEl) iconEl.className = `fas ${iconClass}`;
+      alertText.innerText = message;
+      setTimeout(() => {
+        alertBox.classList.remove("show");
+      }, duration);
+    }
+
+    // EKLENECEK JAVASCRIPT
+    function showLoader(message = "Yükleniyor...") {
+      const loader = document.getElementById("glassLoader");
+      const loaderText = document.getElementById("glassLoaderText");
+      if (loader && loaderText) {
+        loaderText.innerText = message;
+        loader.classList.add("show");
+      }
+    }
+    function hideLoader() {
+      const loader = document.getElementById("glassLoader");
+      if (loader) {
+        loader.classList.remove("show");
+      }
+    }
+    document.getElementById("showLoaderBtn").addEventListener("click", () => {
+      showLoader("Veriler işleniyor, lütfen bekleyin...");
+      // 3 saniye sonra otomatik olarak kapat
+      setTimeout(() => {
+        hideLoader();
+        showGlassAlert(
+          "İşlem tamamlandı!",
+          "fa-check-circle",
+          "glass-alert-success"
+        );
+      }, 3000);
+    });
+  </script>
+</html>

@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI Layout — Header / Sidebar / Content / Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* ═══════════════════════════════════
+       RENK PALETİ
+    ═══════════════════════════════════ */
+    :root {
+      --navy-dark:   #1A3263;
+      --navy-mid:    #4A70A9;
+      --navy-light:  #8FABD4;
+      --steel-dark:  #547792;
+      --steel-light: #7EACB5;
+      --sand-dark:   #DCD0A8;
+      --sand-mid:    #EFECE3;
+      --sand-light:  #FFF4EA;
+      --sand-cream:  #FFF9E5;
+      --amber:       #FAB95B;
+      --amber-bg:    #EDDCC6;
+      --coral:       #BF4646;
+      --forest-dark: #004030;
+      --forest-mid:  #4A9782;
+      --white:       #ffffff;
+      --black:       #000000;
+
+      --grad-navy:   linear-gradient(135deg, #4A70A9 0%, #1A3263 100%);
+      --grad-amber:  linear-gradient(135deg, #FAB95B 0%, #e09030 100%);
+      --grad-forest: linear-gradient(135deg, #4A9782 0%, #004030 100%);
+
+      --radius-pill: 50px;
+      --radius-lg:   14px;
+      --radius-md:   8px;
+      --radius-sm:   5px;
+      --shadow-sm:   0 1px 4px rgba(26,50,99,.10);
+      --shadow-md:   0 4px 14px rgba(26,50,99,.16);
+      --shadow-lg:   0 8px 32px rgba(26,50,99,.22);
+      --transition:  all 0.2s cubic-bezier(0.4,0,0.2,1);
+
+      --sidebar-w:      240px;
+      --sidebar-w-mini: 60px;
+      --header-h:       56px;
+      --footer-h:       56px;
+    }
+
+    /* ═══════════════════════════════════
+       RESET
+    ═══════════════════════════════════ */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--sand-mid);
+      color: var(--navy-dark);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    /* ════════════════════════════════════════════════════════
+       SHARED BUTTON (aynı konsept — pill)
+    ════════════════════════════════════════════════════════ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: .4rem; padding: .45rem 1.1rem;
+      border-radius: var(--radius-pill);
+      font-size: .82rem; font-weight: 600;
+      transition: var(--transition); cursor: pointer; border: none;
+      white-space: nowrap; position: relative; overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn::after {
+      content:''; position:absolute; top:0; left:-100%; width:60%; height:100%;
+      background: linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+      transition: left .4s ease;
+    }
+    .btn:hover::after { left:140%; }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn:active { transform: translateY(1px); }
+
+    .btn-navy   { background: var(--grad-navy); color: var(--white); }
+    .btn-ghost  { background: transparent; color: var(--navy-mid); border: 1.5px solid var(--navy-light); box-shadow:none; }
+    .btn-ghost:hover { background: var(--sand-mid); color: var(--navy-dark); }
+    .btn-icon   { width:34px; height:34px; padding:0; border-radius:50%; }
+    .btn-icon-sq{ width:34px; height:34px; padding:0; border-radius:var(--radius-md); }
+    .btn-sm     { padding: .3rem .8rem; font-size: .76rem; }
+
+    /* Badge */
+    .badge {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: .12rem .5rem; border-radius: var(--radius-pill);
+      font-size: .68rem; font-weight: 700;
+    }
+    .badge-amber { background: var(--amber); color: var(--white); }
+    .badge-coral { background: var(--coral); color: var(--white); }
+    .badge-navy  { background: var(--navy-mid); color: var(--white); }
+    .badge-forest{ background: var(--forest-mid); color: var(--white); }
+
+    /* Avatar */
+    .avatar {
+      flex-shrink:0;
+      width:32px; height:32px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:.72rem; font-weight:700; color:var(--white);
+    }
+    .av-navy  { background: var(--navy-dark); }
+    .av-steel { background: var(--steel-dark); }
+    .av-amber { background: var(--amber); color:var(--navy-dark); }
+    .av-forest{ background: var(--forest-mid); }
+    .av-lg { width:40px; height:40px; font-size:.84rem; }
+
+    /* Divider */
+    .divider { border:none; border-top:1px solid var(--sand-dark); margin:.5rem 0; }
+
+    /* ════════════════════════════════════════════════════════
+       APP SHELL
+    ════════════════════════════════════════════════════════ */
+    .app-shell {
+      display: grid;
+      grid-template-areas:
+        "header  header"
+        "sidebar content"
+        "footer  footer";
+      grid-template-columns: var(--sidebar-w) 1fr;
+      grid-template-rows: var(--header-h) 1fr var(--footer-h);
+      min-height: 100vh;
+      transition: grid-template-columns var(--transition);
+    }
+    .app-shell.sidebar-mini {
+      grid-template-columns: var(--sidebar-w-mini) 1fr;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       HEADER — 3 VARYANT
+    ════════════════════════════════════════════════════════ */
+    /* Varyant A — Navy (kullanılıyor) */
+    .app-header {
+      grid-area: header;
+      position: sticky; top: 0; z-index: 200;
+      height: var(--header-h);
+      background: var(--grad-navy);
+      display: flex; align-items: center;
+      padding: 0 1rem;
+      gap: .75rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-brand {
+      display: flex; align-items: center; gap: .5rem;
+      font-weight: 800; font-size: .95rem; color: var(--white);
+      white-space: nowrap; min-width: calc(var(--sidebar-w) - 1rem - .75rem);
+      transition: var(--transition);
+    }
+    .header-brand .brand-icon {
+      width: 30px; height: 30px; border-radius: var(--radius-md);
+      background: rgba(255,255,255,.18);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.9rem;
+    }
+    .header-brand .brand-text { transition: var(--transition); }
+    .sidebar-mini .header-brand .brand-text { opacity:0; width:0; overflow:hidden; }
+    .sidebar-mini .header-brand { min-width: calc(var(--sidebar-w-mini) - 1rem - .75rem); }
+
+    .header-sep { width:1px; height:28px; background:rgba(255,255,255,.18); flex-shrink:0; }
+
+    .header-search {
+      flex: 1; max-width: 340px;
+      display: flex; align-items: center;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-pill);
+      padding: .3rem .9rem; gap: .5rem;
+    }
+    .header-search i { color: rgba(255,255,255,.6); font-size:.8rem; }
+    .header-search input {
+      background: none; border: none; outline: none;
+      color: var(--white); font-size: .82rem; width: 100%;
+      font-family: inherit;
+    }
+    .header-search input::placeholder { color: rgba(255,255,255,.5); }
+
+    .header-actions { margin-left: auto; display:flex; align-items:center; gap:.4rem; }
+
+    .header-action-btn {
+      width:34px; height:34px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      color:rgba(255,255,255,.8); background:rgba(255,255,255,.1);
+      transition:var(--transition); position:relative; cursor:pointer; border:none;
+    }
+    .header-action-btn:hover { background:rgba(255,255,255,.22); color:var(--white); }
+    .header-action-btn .notif-dot {
+      position:absolute; top:5px; right:5px; width:7px; height:7px;
+      border-radius:50%; background:var(--amber); border:1.5px solid var(--navy-dark);
+    }
+
+    .header-user {
+      display:flex; align-items:center; gap:.5rem;
+      padding:.3rem .6rem; border-radius:var(--radius-pill);
+      background:rgba(255,255,255,.1); cursor:pointer;
+      transition:var(--transition); color:var(--white);
+    }
+    .header-user:hover { background:rgba(255,255,255,.2); }
+    .header-user-name { font-size:.8rem; font-weight:600; }
+    .header-user-role { font-size:.68rem; opacity:.7; }
+    .header-user-caret { font-size:.65rem; opacity:.6; margin-left:.1rem; }
+
+    /* ═══ HEADER VARYANTLARI (referans — görsel çerçevede) ═══ */
+    /* Varyant B — Sand / Açık */
+    .hv-sand {
+      background: var(--white);
+      border-bottom: 1px solid var(--sand-dark);
+      box-shadow: var(--shadow-sm);
+      color: var(--navy-dark);
+    }
+    .hv-sand .header-brand { color: var(--navy-dark); }
+    .hv-sand .header-brand .brand-icon { background: var(--grad-navy); }
+    .hv-sand .header-search {
+      background: var(--sand-mid); border-color: var(--sand-dark);
+    }
+    .hv-sand .header-search i { color: var(--steel-dark); }
+    .hv-sand .header-search input { color: var(--navy-dark); }
+    .hv-sand .header-search input::placeholder { color: #a0a8b8; }
+    .hv-sand .header-action-btn { color: var(--steel-dark); background: var(--sand-mid); }
+    .hv-sand .header-action-btn:hover { background: var(--sand-dark); color: var(--navy-dark); }
+    .hv-sand .header-user { background: var(--sand-mid); color: var(--navy-dark); }
+    .hv-sand .header-user:hover { background: var(--sand-dark); }
+    .hv-sand .header-sep { background: var(--sand-dark); }
+
+    /* Varyant C — Amber vurgu çizgisi */
+    .hv-accent {
+      background: var(--navy-dark);
+      border-bottom: 3px solid var(--amber);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ════════════════════════════════════════════════════════
+       SIDEBAR
+    ════════════════════════════════════════════════════════ */
+    .app-sidebar {
+      grid-area: sidebar;
+      background: var(--white);
+      border-right: 1px solid var(--sand-dark);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transition: width var(--transition);
+      position: sticky; top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+    }
+    .app-sidebar::-webkit-scrollbar { width:4px; }
+    .app-sidebar::-webkit-scrollbar-thumb { background:var(--sand-dark); border-radius:4px; }
+
+    /* Mini mode */
+    .sidebar-mini .app-sidebar { overflow: visible; }
+
+    .sidebar-section { padding: .6rem .75rem .3rem; }
+    .sidebar-section-label {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .6px; color: var(--steel-dark); padding: 0 .35rem;
+      margin-bottom: .2rem; white-space: nowrap;
+      transition: var(--transition);
+    }
+    .sidebar-mini .sidebar-section-label { opacity:0; }
+
+    /* Nav item */
+    .nav-item {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .52rem .55rem; border-radius: var(--radius-md);
+      color: var(--steel-dark); font-size: .84rem; font-weight: 500;
+      transition: var(--transition); cursor: pointer;
+      position: relative; margin-bottom: 1px;
+      white-space: nowrap;
+    }
+    .nav-item:hover { background: var(--sand-mid); color: var(--navy-dark); }
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(74,112,169,.12) 0%, transparent 100%);
+      color: var(--navy-dark); font-weight: 600;
+      border-left: 3px solid var(--navy-mid);
+      padding-left: calc(.55rem - 3px);
+    }
+    .nav-item.active .nav-icon { color: var(--navy-mid); }
+    .nav-icon { width:20px; text-align:center; font-size:.88rem; flex-shrink:0; }
+    .nav-label { transition: var(--transition); }
+    .sidebar-mini .nav-label { opacity:0; width:0; overflow:hidden; }
+    .nav-badge { margin-left:auto; }
+    .sidebar-mini .nav-badge { display:none; }
+    .nav-arrow { margin-left:auto; font-size:.65rem; transition:transform .2s ease; opacity:.5; }
+    .sidebar-mini .nav-arrow { display:none; }
+    .nav-item.open .nav-arrow { transform:rotate(90deg); }
+
+    /* Sub-menu */
+    .nav-sub {
+      overflow:hidden; max-height:0;
+      transition:max-height .25s ease;
+    }
+    .nav-sub.open { max-height:200px; }
+    .nav-sub-item {
+      display:flex; align-items:center; gap:.5rem;
+      padding:.42rem .55rem .42rem 2.1rem;
+      font-size:.82rem; color:var(--steel-dark);
+      border-radius:var(--radius-md); transition:var(--transition);
+      cursor:pointer; white-space:nowrap;
+    }
+    .nav-sub-item:hover { background:var(--sand-mid); color:var(--navy-dark); }
+    .nav-sub-item.active { color:var(--navy-mid); font-weight:600; }
+    .nav-sub-item::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.4; flex-shrink:0; }
+    .sidebar-mini .nav-sub { display:none; }
+
+    /* Sidebar tooltip (mini modda) */
+    .nav-item .sidebar-tip {
+      display:none; position:absolute; left:calc(var(--sidebar-w-mini) + 4px); top:50%; transform:translateY(-50%);
+      background:var(--navy-dark); color:var(--white); padding:.3rem .7rem;
+      border-radius:var(--radius-sm); font-size:.76rem; white-space:nowrap;
+      pointer-events:none; z-index:300; box-shadow:var(--shadow-md);
+    }
+    .nav-item .sidebar-tip::before {
+      content:''; position:absolute; right:100%; top:50%; transform:translateY(-50%);
+      border:5px solid transparent; border-right-color:var(--navy-dark);
+    }
+    .sidebar-mini .nav-item:hover .sidebar-tip { display:block; }
+
+    /* Sidebar footer */
+    .sidebar-footer {
+      margin-top: auto; padding: .75rem;
+      border-top: 1px solid var(--sand-dark);
+    }
+    .sidebar-user {
+      display:flex; align-items:center; gap:.6rem;
+      padding:.5rem; border-radius:var(--radius-md);
+      transition:var(--transition); cursor:pointer;
+    }
+    .sidebar-user:hover { background:var(--sand-mid); }
+    .sidebar-user-info { overflow:hidden; transition:var(--transition); }
+    .sidebar-mini .sidebar-user-info { opacity:0; width:0; }
+    .sidebar-user-name { font-size:.82rem; font-weight:700; color:var(--navy-dark); white-space:nowrap; }
+    .sidebar-user-role { font-size:.7rem; color:var(--steel-dark); }
+    .sidebar-user-icon { margin-left:auto; color:var(--steel-dark); font-size:.7rem; }
+    .sidebar-mini .sidebar-user-icon { display:none; }
+
+    /* ════════════════════════════════════════════════════════
+       CONTENT AREA
+    ════════════════════════════════════════════════════════ */
+    .app-content {
+      grid-area: content;
+      display: flex; flex-direction: column;
+      min-height: 0;
+    }
+
+    /* Breadcrumb bar */
+    .content-topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--sand-dark);
+      padding: .5rem 1.4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: .75rem; flex-wrap: wrap;
+    }
+    .breadcrumb { display:flex; align-items:center; gap:.25rem; font-size:.8rem; list-style:none; }
+    .breadcrumb li a { color:var(--navy-mid); }
+    .breadcrumb li a:hover { text-decoration:underline; }
+    .breadcrumb li:not(:last-child)::after { content:'/'; margin-left:.25rem; color:var(--sand-dark); }
+    .breadcrumb li:last-child { color:var(--steel-dark); font-weight:600; }
+    .topbar-actions { display:flex; align-items:center; gap:.4rem; }
+
+    /* Page header inside content */
+    .page-heading {
+      padding: 1.2rem 1.4rem .8rem;
+    }
+    .page-heading h1 { font-size:1.25rem; font-weight:800; color:var(--navy-dark); }
+    .page-heading p  { font-size:.82rem; color:var(--steel-dark); margin-top:.2rem; }
+
+    /* Content body */
+    .content-body {
+      flex: 1; padding: 0 1.4rem 1.4rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+
+    /* Content row */
+    .c-row { display:flex; gap:1rem; flex-wrap:wrap; }
+    .c-col { flex:1; min-width:200px; }
+    .c-col-2 { flex:2; min-width:300px; }
+    .c-col-3 { flex:3; min-width:400px; }
+
+    /* Panel / card */
+    .panel {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--sand-dark);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .panel-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:.75rem 1rem; border-bottom:1px solid var(--sand-mid);
+      background: var(--sand-cream);
+    }
+    .panel-title { font-size:.85rem; font-weight:700; color:var(--navy-dark); display:flex; align-items:center; gap:.4rem; }
+    .panel-title i { color:var(--navy-mid); }
+    .panel-actions { display:flex; gap:.3rem; }
+    .panel-body { padding:1rem; }
+    .panel-body-sm { padding:.65rem 1rem; }
+    .panel-footer {
+      padding:.65rem 1rem; border-top:1px solid var(--sand-mid);
+      background:var(--sand-cream); display:flex; align-items:center; gap:.5rem;
+    }
+
+    /* Skeleton loader (içerik placeholder) */
+    .skel {
+      background: linear-gradient(90deg, var(--sand-mid) 25%, var(--sand-dark) 50%, var(--sand-mid) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: var(--radius-sm);
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .skel-line  { height:12px; margin-bottom:8px; }
+    .skel-line.w-full { width:100%; }
+    .skel-line.w-3q   { width:75%; }
+    .skel-line.w-half { width:50%; }
+    .skel-line.w-1q   { width:25%; }
+    .skel-box   { height:120px; width:100%; border-radius:var(--radius-md); }
+    .skel-circle{ width:40px; height:40px; border-radius:50%; flex-shrink:0; }
+    .skel-avatar-row { display:flex; align-items:center; gap:.6rem; margin-bottom:.6rem; }
+
+    /* Stat mini */
+    .stat-row { display:flex; gap:.75rem; flex-wrap:wrap; }
+    .stat-mini {
+      flex:1; min-width:120px;
+      background:var(--white); border:1px solid var(--sand-dark);
+      border-radius:var(--radius-lg); padding:.8rem 1rem;
+      box-shadow:var(--shadow-sm);
+    }
+    .stat-mini-label { font-size:.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.4px; color:var(--steel-dark); }
+    .stat-mini-value { font-size:1.55rem; font-weight:800; color:var(--navy-dark); line-height:1.1; margin:.15rem 0; }
+    .stat-mini-sub   { font-size:.72rem; display:flex; align-items:center; gap:.2rem; }
+    .up   { color:var(--forest-mid); }
+    .down { color:var(--coral); }
+    .stat-mini-bar { height:3px; border-radius:2px; margin-top:.5rem; background:var(--sand-dark); overflow:hidden; }
+    .stat-mini-bar-fill { height:100%; border-radius:2px; }
+
+    /* List item */
+    .list-item {
+      display:flex; align-items:center; gap:.7rem;
+      padding:.6rem 0; border-bottom:1px solid var(--sand-mid);
+    }
+    .list-item:last-child { border-bottom:none; }
+    .list-item-info { flex:1; min-width:0; }
+    .list-item-title { font-size:.82rem; font-weight:600; color:var(--navy-dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .list-item-sub   { font-size:.72rem; color:var(--steel-dark); }
+    .list-item-right { flex-shrink:0; text-align:right; }
+    .list-item-val   { font-size:.82rem; font-weight:700; color:var(--navy-dark); }
+    .list-item-time  { font-size:.7rem; color:var(--steel-dark); }
+
+    /* Progress in panel */
+    .progress { height:6px; background:var(--sand-dark); border-radius:3px; overflow:hidden; }
+    .progress-bar { height:100%; border-radius:3px; }
+    .pb-navy   { background:var(--grad-navy); }
+    .pb-amber  { background:var(--grad-amber); }
+    .pb-forest { background:var(--grad-forest); }
+
+    /* Tab inside panel */
+    .panel-tabs { display:flex; border-bottom:1px solid var(--sand-dark); }
+    .panel-tab  {
+      padding:.5rem .9rem; font-size:.78rem; font-weight:600;
+      color:var(--steel-dark); background:none; border:none; cursor:pointer;
+      border-bottom:2px solid transparent; margin-bottom:-1px; transition:var(--transition);
+    }
+    .panel-tab:hover   { color:var(--navy-dark); }
+    .panel-tab.active  { color:var(--navy-dark); border-bottom-color:var(--navy-mid); }
+
+    /* Table inside panel */
+    .ptable { width:100%; border-collapse:collapse; font-size:.8rem; }
+    .ptable th { padding:.45rem .7rem; text-align:left; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.3px; color:var(--steel-dark); background:var(--sand-mid); }
+    .ptable td { padding:.5rem .7rem; border-bottom:1px solid var(--sand-mid); color:var(--navy-dark); }
+    .ptable tr:last-child td { border-bottom:none; }
+    .ptable tr:hover td { background:var(--sand-light); }
+
+    /* ════════════════════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════════════════════ */
+    .app-footer {
+      grid-area: footer;
+      height: var(--footer-h);
+      background: var(--white);
+      border-top: 1px solid var(--sand-dark);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.4rem;
+      font-size: .75rem; color: var(--steel-dark);
+      box-shadow: 0 -1px 4px rgba(26,50,99,.06);
+      position: sticky; bottom: 0; z-index: 100;
+    }
+    .footer-left  { display:flex; align-items:center; gap:.5rem; }
+    .footer-center{ display:flex; align-items:center; gap:1rem; }
+    .footer-right { display:flex; align-items:center; gap:.5rem; }
+    .footer-link { color:var(--navy-mid); transition:var(--transition); }
+    .footer-link:hover { color:var(--navy-dark); text-decoration:underline; }
+    .footer-sep  { width:1px; height:14px; background:var(--sand-dark); }
+    .footer-status {
+      display:flex; align-items:center; gap:.35rem;
+      font-size:.72rem;
+    }
+    .status-dot { width:7px; height:7px; border-radius:50%; }
+    .status-online { background:var(--forest-mid); }
+
+    /* ════════════════════════════════════════════════════════
+       MOBILE OVERLAY (sidebar)
+    ════════════════════════════════════════════════════════ */
+    .sidebar-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(26,50,99,.4); backdrop-filter:blur(2px);
+      z-index:150;
+    }
+    .sidebar-overlay.show { display:block; }
+
+    /* ════════════════════════════════════════════════════════
+       HEADER VARYANT SHOWCASE (sayfanın üstünde)
+    ════════════════════════════════════════════════════════ */
+    .variant-showcase {
+      background: var(--sand-mid); padding: 1.5rem;
+      border-bottom: 2px solid var(--sand-dark);
+    }
+    .variant-title {
+      font-size:.7rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.6px; color:var(--steel-dark); margin-bottom:.5rem;
+    }
+    .variant-header-wrap {
+      border-radius:var(--radius-lg); overflow:hidden;
+      box-shadow:var(--shadow-md); margin-bottom:.75rem;
+    }
+    .variant-header-wrap .app-header { position:static; }
+
+    /* ════════════════════════════════════════════════════════
+       SIDEBAR VARYANT SHOWCASE (float panel)
+    ════════════════════════════════════════════════════════ */
+    .sidebar-variants {
+      display:flex; gap:1rem; padding:1.5rem; background:var(--sand-mid);
+      border-bottom:2px solid var(--sand-dark); overflow-x:auto;
+    }
+    .sv-wrap {
+      border-radius:var(--radius-lg); overflow:hidden;
+      border:1px solid var(--sand-dark); box-shadow:var(--shadow-md);
+      flex-shrink:0; width:200px; min-height:320px;
+      display:flex; flex-direction:column;
+    }
+
+    /* Sidebar Varyant 2 — Dark Navy */
+    .sv-dark {
+      background: var(--navy-dark);
+      border-color:var(--navy-mid);
+    }
+    .sv-dark .sidebar-section-label { color:rgba(143,171,212,.7); }
+    .sv-dark .nav-item { color:rgba(143,171,212,.85); }
+    .sv-dark .nav-item:hover { background:rgba(255,255,255,.08); color:var(--white); }
+    .sv-dark .nav-item.active {
+      background:rgba(74,112,169,.3); color:var(--white);
+      border-left-color:var(--amber);
+    }
+    .sv-dark .nav-item.active .nav-icon { color:var(--amber); }
+    .sv-dark .nav-sub-item { color:rgba(143,171,212,.7); }
+    .sv-dark .nav-sub-item:hover { background:rgba(255,255,255,.06); color:var(--white); }
+    .sv-dark .divider { border-color:rgba(255,255,255,.1); }
+    .sv-dark .sidebar-footer { border-color:rgba(255,255,255,.12); }
+    .sv-dark .sidebar-user:hover { background:rgba(255,255,255,.08); }
+    .sv-dark .sidebar-user-name { color:var(--white); }
+    .sv-dark .sidebar-user-role { color:rgba(143,171,212,.7); }
+    .sv-dark .sidebar-section-label { color:rgba(255,255,255,.4); }
+
+    /* Sidebar Varyant 3 — Sand/Warm */
+    .sv-sand {
+      background: var(--sand-cream);
+      border-color: var(--sand-dark);
+    }
+    .sv-sand .nav-item.active {
+      background:linear-gradient(90deg,rgba(250,185,91,.2) 0%,transparent 100%);
+      border-left-color:var(--amber); color:var(--navy-dark);
+    }
+    .sv-sand .nav-item.active .nav-icon { color:var(--amber); }
+
+    /* ════════════════════════════════════════════════════════
+       FOOTER VARYANT SHOWCASE
+    ════════════════════════════════════════════════════════ */
+    .footer-variants {
+      display:flex; flex-direction:column; gap:.75rem;
+      padding:1.5rem; background:var(--sand-mid);
+    }
+    .fv-wrap {
+      border-radius:var(--radius-lg); overflow:hidden;
+      box-shadow:var(--shadow-sm); border:1px solid var(--sand-dark);
+    }
+    .fv-wrap .app-footer { position:static; }
+
+    /* Footer Varyant 2 — Navy */
+    .fv-navy .app-footer {
+      background:var(--navy-dark); border-top:none; color:rgba(143,171,212,.8);
+    }
+    .fv-navy .footer-link { color:var(--navy-light); }
+    .fv-navy .footer-sep  { background:rgba(255,255,255,.15); }
+
+    /* Footer Varyant 3 — Accent line */
+    .fv-accent .app-footer {
+      border-top:3px solid var(--amber);
+    }
+
+    /* ════════════════════════════════════════════════════════
+       UTILITY
+    ════════════════════════════════════════════════════════ */
+    .section-label {
+      font-size:.68rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.6px; color:var(--steel-dark);
+      border-left:3px solid var(--amber); padding-left:.5rem;
+      margin-bottom:.75rem;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .app-shell {
+        grid-template-areas: "header" "content" "footer";
+        grid-template-columns: 1fr;
+        grid-template-rows: var(--header-h) 1fr var(--footer-h);
+      }
+      .app-sidebar {
+        position: fixed; top:0; left:0; height:100vh;
+        transform: translateX(-100%); z-index:200; width:var(--sidebar-w) !important;
+        transition: transform .25s ease;
+        border-right:1px solid var(--sand-dark);
+        box-shadow: var(--shadow-lg);
+      }
+      .app-sidebar.mobile-open { transform: translateX(0); }
+      .header-search { display:none; }
+      .footer-center { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     HEADER VARYANTLARI — showcase
+══════════════════════════════════════════════════════════ -->
+<div class="variant-showcase">
+  <div class="section-label" style="margin-bottom:1rem">Header Varyantları</div>
+
+  <!-- A: Navy Gradient (default) -->
+  <div class="variant-title">A — Navy Gradient (Aktif Uygulama)</div>
+  <div class="variant-header-wrap">
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon"><i class="fas fa-layer-group" style="color:#fff"></i></div>
+        <span class="brand-text">BrandUI</span>
+      </div>
+      <div class="header-sep"></div>
+      <div class="header-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Ara...">
+      </div>
+      <div class="header-actions">
+        <button class="header-action-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+        <button class="header-action-btn"><i class="fas fa-question-circle"></i></button>
+        <div class="header-user">
+          <div class="avatar av-amber" style="width:26px;height:26px;font-size:.65rem">AY</div>
+          <div>
+            <div class="header-user-name">Ahmet Y.</div>
+            <div class="header-user-role">Admin</div>
+          </div>
+          <i class="fas fa-chevron-down header-user-caret"></i>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <!-- B: Sand / Açık -->
+  <div class="variant-title">B — Sand / Açık Tema</div>
+  <div class="variant-header-wrap" style="margin-bottom:.75rem">
+    <header class="app-header hv-sand">
+      <div class="header-brand" style="color:var(--navy-dark)">
+        <div class="brand-icon"><i class="fas fa-layer-group" style="color:#fff"></i></div>
+        <span class="brand-text">BrandUI</span>
+      </div>
+      <div class="header-sep"></div>
+      <div class="header-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Ara...">
+      </div>
+      <div class="header-actions">
+        <button class="header-action-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+        <button class="header-action-btn"><i class="fas fa-cog"></i></button>
+        <div class="header-user">
+          <div class="avatar av-navy" style="width:26px;height:26px;font-size:.65rem">AY</div>
+          <div>
+            <div class="header-user-name">Ahmet Y.</div>
+            <div class="header-user-role">Admin</div>
+          </div>
+          <i class="fas fa-chevron-down header-user-caret"></i>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <!-- C: Accent çizgi -->
+  <div class="variant-title">C — Navy + Amber Çizgi</div>
+  <div class="variant-header-wrap">
+    <header class="app-header hv-accent">
+      <div class="header-brand">
+        <div class="brand-icon"><i class="fas fa-layer-group" style="color:#fff"></i></div>
+        <span class="brand-text">BrandUI</span>
+      </div>
+      <div class="header-sep"></div>
+      <nav style="display:flex;gap:.1rem">
+        <a href="#" class="nav-header-link" style="padding:.3rem .7rem;border-radius:var(--radius-sm);font-size:.82rem;color:rgba(255,255,255,.7);transition:var(--transition)">Panel</a>
+        <a href="#" class="nav-header-link" style="padding:.3rem .7rem;border-radius:var(--radius-sm);font-size:.82rem;color:rgba(255,255,255,.7);transition:var(--transition)">Ürünler</a>
+        <a href="#" class="nav-header-link" style="padding:.3rem .7rem;border-radius:var(--radius-sm);font-size:.82rem;color:var(--amber);font-weight:700;border-bottom:2px solid var(--amber)">Raporlar</a>
+        <a href="#" class="nav-header-link" style="padding:.3rem .7rem;border-radius:var(--radius-sm);font-size:.82rem;color:rgba(255,255,255,.7);transition:var(--transition)">Ayarlar</a>
+      </nav>
+      <div class="header-actions">
+        <button class="header-action-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+        <div class="header-user">
+          <div class="avatar av-amber" style="width:26px;height:26px;font-size:.65rem">AY</div>
+          <div>
+            <div class="header-user-name">Ahmet Y.</div>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SİDEBAR VARYANTLARI — showcase
+══════════════════════════════════════════════════════════ -->
+<div class="sidebar-variants">
+  <div style="flex-shrink:0;padding-top:.2rem"><div class="section-label">Sidebar Varyantları</div></div>
+
+  <!-- Varyant 1: White (default) -->
+  <div>
+    <div class="variant-title" style="margin-bottom:.4rem">A — White</div>
+    <div class="sv-wrap">
+      <div style="padding:.6rem .75rem .3rem">
+        <div class="sidebar-section-label">ANA MENÜ</div>
+        <a class="nav-item active"><span class="nav-icon"><i class="fas fa-home"></i></span><span class="nav-label">Genel Bakış</span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-chart-bar"></i></span><span class="nav-label">Raporlar</span><span class="nav-badge"><span class="badge badge-amber">3</span></span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-users"></i></span><span class="nav-label">Kullanıcılar</span></a>
+        <a class="nav-item" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+          <span class="nav-icon"><i class="fas fa-box"></i></span><span class="nav-label">Ürünler</span><i class="fas fa-chevron-right nav-arrow"></i>
+        </a>
+        <div class="nav-sub">
+          <div class="nav-sub-item active">Tüm Ürünler</div>
+          <div class="nav-sub-item">Kategoriler</div>
+          <div class="nav-sub-item">Stok</div>
+        </div>
+      </div>
+      <div style="padding:.3rem .75rem">
+        <hr class="divider">
+        <div class="sidebar-section-label">SİSTEM</div>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-cog"></i></span><span class="nav-label">Ayarlar</span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-shield-alt"></i></span><span class="nav-label">Güvenlik</span></a>
+      </div>
+      <div class="sidebar-footer" style="margin-top:auto">
+        <div class="sidebar-user">
+          <div class="avatar av-navy av-lg">AY</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Ahmet Yılmaz</div>
+            <div class="sidebar-user-role">Sistem Admin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Varyant 2: Dark Navy -->
+  <div>
+    <div class="variant-title" style="margin-bottom:.4rem">B — Dark Navy</div>
+    <div class="sv-wrap sv-dark">
+      <div style="padding:.6rem .75rem .3rem">
+        <div class="sidebar-section-label">ANA MENÜ</div>
+        <a class="nav-item active"><span class="nav-icon"><i class="fas fa-home"></i></span><span class="nav-label">Genel Bakış</span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-chart-bar"></i></span><span class="nav-label">Raporlar</span><span class="nav-badge"><span class="badge badge-amber">3</span></span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-users"></i></span><span class="nav-label">Kullanıcılar</span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-box"></i></span><span class="nav-label">Ürünler</span></a>
+      </div>
+      <div style="padding:.3rem .75rem">
+        <hr class="divider">
+        <div class="sidebar-section-label">SİSTEM</div>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-cog"></i></span><span class="nav-label">Ayarlar</span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-shield-alt"></i></span><span class="nav-label">Güvenlik</span></a>
+      </div>
+      <div class="sidebar-footer" style="margin-top:auto">
+        <div class="sidebar-user">
+          <div class="avatar av-amber av-lg">AY</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" style="color:#fff">Ahmet Yılmaz</div>
+            <div class="sidebar-user-role">Sistem Admin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Varyant 3: Sand Warm -->
+  <div>
+    <div class="variant-title" style="margin-bottom:.4rem">C — Sand / Sıcak</div>
+    <div class="sv-wrap sv-sand">
+      <div style="padding:.6rem .75rem .3rem">
+        <div class="sidebar-section-label">ANA MENÜ</div>
+        <a class="nav-item active"><span class="nav-icon"><i class="fas fa-home"></i></span><span class="nav-label">Genel Bakış</span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-chart-bar"></i></span><span class="nav-label">Raporlar</span><span class="nav-badge"><span class="badge badge-amber">3</span></span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-users"></i></span><span class="nav-label">Kullanıcılar</span></a>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-box"></i></span><span class="nav-label">Ürünler</span></a>
+      </div>
+      <div style="padding:.3rem .75rem">
+        <hr class="divider">
+        <div class="sidebar-section-label">SİSTEM</div>
+        <a class="nav-item"><span class="nav-icon"><i class="fas fa-cog"></i></span><span class="nav-label">Ayarlar</span></a>
+      </div>
+      <div class="sidebar-footer" style="margin-top:auto;border-color:var(--sand-dark)">
+        <div class="sidebar-user">
+          <div class="avatar av-steel av-lg">AY</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Ahmet Yılmaz</div>
+            <div class="sidebar-user-role">Sistem Admin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Varyant 4: Mini / Collapsed -->
+  <div>
+    <div class="variant-title" style="margin-bottom:.4rem">D — Mini / Collapsed</div>
+    <div class="sv-wrap" style="width:60px">
+      <div style="padding:.6rem .5rem .3rem;display:flex;flex-direction:column;gap:2px">
+        <a class="nav-item active" style="justify-content:center;padding:.52rem;border-left:3px solid var(--navy-mid)"><span class="nav-icon" style="width:auto"><i class="fas fa-home"></i></span></a>
+        <a class="nav-item" style="justify-content:center;padding:.52rem"><span class="nav-icon" style="width:auto"><i class="fas fa-chart-bar"></i></span></a>
+        <a class="nav-item" style="justify-content:center;padding:.52rem"><span class="nav-icon" style="width:auto"><i class="fas fa-users"></i></span></a>
+        <a class="nav-item" style="justify-content:center;padding:.52rem"><span class="nav-icon" style="width:auto"><i class="fas fa-box"></i></span></a>
+        <hr class="divider">
+        <a class="nav-item" style="justify-content:center;padding:.52rem"><span class="nav-icon" style="width:auto"><i class="fas fa-cog"></i></span></a>
+        <a class="nav-item" style="justify-content:center;padding:.52rem"><span class="nav-icon" style="width:auto"><i class="fas fa-shield-alt"></i></span></a>
+      </div>
+      <div class="sidebar-footer" style="margin-top:auto;padding:.5rem;display:flex;justify-content:center">
+        <div class="avatar av-navy av-lg">AY</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER VARYANTLARI — showcase
+══════════════════════════════════════════════════════════ -->
+<div class="footer-variants">
+  <div class="section-label">Footer Varyantları</div>
+
+  <!-- A: White (default) -->
+  <div class="variant-title">A — White / Açık</div>
+  <div class="fv-wrap">
+    <footer class="app-footer">
+      <div class="footer-left">
+        <i class="fas fa-layer-group" style="color:var(--navy-mid)"></i>
+        <span style="font-weight:700;color:var(--navy-dark)">BrandUI</span>
+        <span class="footer-sep"></span>
+        <span>© 2025 Tüm hakları saklıdır.</span>
+      </div>
+      <div class="footer-center">
+        <a href="#" class="footer-link">Gizlilik</a>
+        <a href="#" class="footer-link">Kullanım Koşulları</a>
+        <a href="#" class="footer-link">Destek</a>
+      </div>
+      <div class="footer-right">
+        <div class="footer-status">
+          <span class="status-dot status-online"></span>
+          <span>Tüm sistemler çalışıyor</span>
+        </div>
+        <span class="footer-sep"></span>
+        <span>v2.4.1</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- B: Navy Dark -->
+  <div class="variant-title">B — Navy Dark</div>
+  <div class="fv-wrap fv-navy">
+    <footer class="app-footer">
+      <div class="footer-left">
+        <i class="fas fa-layer-group" style="color:var(--navy-light)"></i>
+        <span style="font-weight:700;color:#fff">BrandUI</span>
+        <span class="footer-sep"></span>
+        <span>© 2025 Tüm hakları saklıdır.</span>
+      </div>
+      <div class="footer-center">
+        <a href="#" class="footer-link">Gizlilik</a>
+        <a href="#" class="footer-link">Kullanım Koşulları</a>
+        <a href="#" class="footer-link">Destek</a>
+      </div>
+      <div class="footer-right">
+        <div class="footer-status">
+          <span class="status-dot status-online"></span>
+          <span>Tüm sistemler çalışıyor</span>
+        </div>
+        <span class="footer-sep"></span>
+        <span>v2.4.1</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- C: Amber Accent Line -->
+  <div class="variant-title">C — Amber Çizgi</div>
+  <div class="fv-wrap fv-accent">
+    <footer class="app-footer">
+      <div class="footer-left">
+        <i class="fas fa-layer-group" style="color:var(--navy-mid)"></i>
+        <span style="font-weight:700;color:var(--navy-dark)">BrandUI</span>
+        <span class="footer-sep"></span>
+        <span>© 2025 Tüm hakları saklıdır.</span>
+      </div>
+      <div class="footer-center">
+        <a href="#" class="footer-link">Gizlilik</a>
+        <a href="#" class="footer-link">Kullanım Koşulları</a>
+        <a href="#" class="footer-link">Destek</a>
+      </div>
+      <div class="footer-right">
+        <div class="footer-status">
+          <span class="status-dot status-online"></span>
+          <span>Tüm sistemler çalışıyor</span>
+        </div>
+        <span class="footer-sep"></span>
+        <span style="color:var(--amber);font-weight:700">v2.4.1</span>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TAM SAYFA UYGULAMA — canlı demo
+══════════════════════════════════════════════════════════ -->
+<div style="padding:.6rem 1.5rem;background:var(--sand-dark);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--navy-dark)">
+  ↓ Tam Sayfa Uygulama Layout — Canlı Demo (Sidebar toggle çalışır)
+</div>
+
+<div class="app-shell" id="appShell">
+
+  <!-- ═══ HEADER ════════════════════════════════ -->
+  <header class="app-header">
+    <!-- Sidebar toggle -->
+    <button class="header-action-btn" id="sidebarToggle" onclick="toggleSidebar()" style="margin-right:.25rem">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="header-brand">
+      <div class="brand-icon"><i class="fas fa-layer-group" style="color:#fff"></i></div>
+      <span class="brand-text">BrandUI</span>
+    </div>
+    <div class="header-sep"></div>
+    <div class="header-search">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Hızlı ara… (Ctrl+K)">
+    </div>
+    <div class="header-actions">
+      <button class="header-action-btn" title="Bildirimler">
+        <i class="fas fa-bell"></i><span class="notif-dot"></span>
+      </button>
+      <button class="header-action-btn" title="Mesajlar">
+        <i class="fas fa-comment-dots"></i>
+      </button>
+      <button class="header-action-btn" title="Yardım">
+        <i class="fas fa-question-circle"></i>
+      </button>
+      <div class="header-sep"></div>
+      <div class="header-user">
+        <div class="avatar av-amber" style="width:28px;height:28px;font-size:.68rem">AY</div>
+        <div>
+          <div class="header-user-name">Ahmet Yılmaz</div>
+          <div class="header-user-role">Sistem Admin</div>
+        </div>
+        <i class="fas fa-chevron-down header-user-caret"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ SİDEBAR ═══════════════════════════════ -->
+  <aside class="app-sidebar" id="appSidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">ANA MENÜ</div>
+      <a class="nav-item active">
+        <span class="nav-icon"><i class="fas fa-home"></i></span>
+        <span class="nav-label">Genel Bakış</span>
+        <span class="sidebar-tip">Genel Bakış</span>
+      </a>
+      <a class="nav-item">
+        <span class="nav-icon"><i class="fas fa-chart-bar"></i></span>
+        <span class="nav-label">Raporlar</span>
+        <span class="nav-badge"><span class="badge badge-amber">3</span></span>
+        <span class="sidebar-tip">Raporlar</span>
+      </a>
+      <a class="nav-item">
+        <span class="nav-icon"><i class="fas fa-users"></i></span>
+        <span class="nav-label">Kullanıcılar</span>
+        <span class="sidebar-tip">Kullanıcılar</span>
+      </a>
+      <a class="nav-item" onclick="toggleSubMenu(this)">
+        <span class="nav-icon"><i class="fas fa-box"></i></span>
+        <span class="nav-label">Ürünler</span>
+        <i class="fas fa-chevron-right nav-arrow"></i>
+        <span class="sidebar-tip">Ürünler</span>
+      </a>
+      <div class="nav-sub" id="subProducts">
+        <div class="nav-sub-item active">Tüm Ürünler</div>
+        <div class="nav-sub-item">Kategoriler</div>
+        <div class="nav-sub-item">Stok Durumu</div>
+        <div class="nav-sub-item">Fiyatlar</div>
+      </div>
+      <a class="nav-item" onclick="toggleSubMenu(this)">
+        <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
+        <span class="nav-label">Siparişler</span>
+        <span class="nav-badge"><span class="badge badge-coral">12</span></span>
+        <i class="fas fa-chevron-right nav-arrow"></i>
+        <span class="sidebar-tip">Siparişler</span>
+      </a>
+      <div class="nav-sub" id="subOrders">
+        <div class="nav-sub-item">Yeni</div>
+        <div class="nav-sub-item">İşlemde</div>
+        <div class="nav-sub-item">Tamamlanan</div>
+        <div class="nav-sub-item">İptal</div>
+      </div>
+      <a class="nav-item">
+        <span class="nav-icon"><i class="fas fa-tags"></i></span>
+        <span class="nav-label">Kampanyalar</span>
+        <span class="sidebar-tip">Kampanyalar</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <hr class="divider">
+      <div class="sidebar-section-label">ANALİTİK</div>
+      <a class="nav-item">
+        <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+        <span class="nav-label">Satış Analizi</span>
+        <span class="sidebar-tip">Satış Analizi</span>
+      </a>
+      <a class="nav-item">
+        <span class="nav-icon"><i class="fas fa-funnel-dollar"></i></span>
+        <span class="nav-label">Dönüşüm</span>
+        <span class="sidebar-tip">Dönüşüm</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <hr class="divider">
+      <div class="sidebar-section-label">SİSTEM</div>
+      <a class="nav-item">
+        <span class="nav-icon"><i class="fas fa-cog"></i></span>
+        <span class="nav-label">Ayarlar</span>
+        <span class="sidebar-tip">Ayarlar</span>
+      </a>
+      <a class="nav-item">
+        <span class="nav-icon"><i class="fas fa-shield-alt"></i></span>
+        <span class="nav-label">Güvenlik</span>
+        <span class="sidebar-tip">Güvenlik</span>
+      </a>
+      <a class="nav-item">
+        <span class="nav-icon"><i class="fas fa-life-ring"></i></span>
+        <span class="nav-label">Destek</span>
+        <span class="sidebar-tip">Destek</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar av-navy av-lg">AY</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Ahmet Yılmaz</div>
+          <div class="sidebar-user-role">Sistem Admin</div>
+        </div>
+        <i class="fas fa-ellipsis-h sidebar-user-icon"></i>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ CONTENT ════════════════════════════════ -->
+  <main class="app-content">
+
+    <!-- Topbar -->
+    <div class="content-topbar">
+      <ol class="breadcrumb">
+        <li><a href="#">Ana Sayfa</a></li>
+        <li><a href="#">Panel</a></li>
+        <li>Genel Bakış</li>
+      </ol>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm"><i class="fas fa-download"></i> Dışa Aktar</button>
+        <button class="btn btn-navy btn-sm"><i class="fas fa-plus"></i> Yeni Ekle</button>
+      </div>
+    </div>
+
+    <!-- Page heading -->
+    <div class="page-heading">
+      <h1>Genel Bakış</h1>
+      <p>Son güncelleme: Bugün, 14:32 — <span style="color:var(--forest-mid)"><i class="fas fa-circle" style="font-size:.5rem"></i> Canlı</span></p>
+    </div>
+
+    <!-- Content body -->
+    <div class="content-body">
+
+      <!-- KPI Row -->
+      <div class="stat-row">
+        <div class="stat-mini">
+          <div class="stat-mini-label">Toplam Satış</div>
+          <div class="stat-mini-value">₺84.2K</div>
+          <div class="stat-mini-sub up"><i class="fas fa-arrow-up" style="font-size:.6rem"></i> %12.5</div>
+          <div class="stat-mini-bar"><div class="stat-mini-bar-fill pb-navy" style="width:75%"></div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Aktif Kullanıcı</div>
+          <div class="stat-mini-value">2,419</div>
+          <div class="stat-mini-sub up"><i class="fas fa-arrow-up" style="font-size:.6rem"></i> %8.1</div>
+          <div class="stat-mini-bar"><div class="stat-mini-bar-fill pb-forest" style="width:60%"></div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Bekleyen Sipariş</div>
+          <div class="stat-mini-value">38</div>
+          <div class="stat-mini-sub down"><i class="fas fa-arrow-down" style="font-size:.6rem"></i> %3.2</div>
+          <div class="stat-mini-bar"><div class="stat-mini-bar-fill pb-amber" style="width:38%"></div></div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Dönüşüm</div>
+          <div class="stat-mini-value">4.7%</div>
+          <div class="stat-mini-sub down" style="color:var(--coral)"><i class="fas fa-arrow-down" style="font-size:.6rem"></i> %0.8</div>
+          <div class="stat-mini-bar"><div class="stat-mini-bar-fill" style="width:47%;background:var(--grad-coral)"></div></div>
+        </div>
+      </div>
+
+      <!-- İki panel yan yana -->
+      <div class="c-row">
+        <!-- Sol: Grafik / Liste -->
+        <div class="c-col-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fas fa-chart-area"></i> Satış Grafiği</div>
+              <div class="panel-actions">
+                <div style="display:flex;gap:.2rem;background:var(--sand-mid);padding:.2rem;border-radius:var(--radius-pill)">
+                  <button class="btn btn-navy btn-sm" style="padding:.2rem .6rem;font-size:.7rem">Gün</button>
+                  <button class="btn btn-ghost btn-sm" style="padding:.2rem .6rem;font-size:.7rem;border:none;box-shadow:none">Hafta</button>
+                  <button class="btn btn-ghost btn-sm" style="padding:.2rem .6rem;font-size:.7rem;border:none;box-shadow:none">Ay</button>
+                </div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <!-- Skel grafik placeholder -->
+              <div class="skel skel-box" style="height:160px"></div>
+            </div>
+            <div class="panel-footer">
+              <span style="font-size:.75rem;color:var(--steel-dark)">Önceki döneme göre</span>
+              <span class="badge badge-forest" style="margin-left:.4rem">+12.5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sağ: Son aktiviteler -->
+        <div class="c-col">
+          <div class="panel" style="height:100%">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fas fa-clock"></i> Son Aktiviteler</div>
+              <button class="btn btn-ghost btn-sm" style="font-size:.72rem">Tümü</button>
+            </div>
+            <div class="panel-body-sm">
+              <div class="list-item">
+                <div class="avatar av-navy" style="width:28px;height:28px;font-size:.65rem">FK</div>
+                <div class="list-item-info">
+                  <div class="list-item-title">Fatma Kaya sipariş oluşturdu</div>
+                  <div class="list-item-sub">#ORD-2841</div>
+                </div>
+                <div class="list-item-right">
+                  <div class="list-item-time">2 dk</div>
+                  <span class="badge badge-forest" style="font-size:.62rem">Yeni</span>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="avatar av-amber" style="width:28px;height:28px;font-size:.65rem">MC</div>
+                <div class="list-item-info">
+                  <div class="list-item-title">Mehmet Çelik üye oldu</div>
+                  <div class="list-item-sub">mcelik@ornek.com</div>
+                </div>
+                <div class="list-item-right">
+                  <div class="list-item-time">15 dk</div>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="avatar av-steel" style="width:28px;height:28px;font-size:.65rem">ZD</div>
+                <div class="list-item-info">
+                  <div class="list-item-title">Zeynep Demir ödeme yaptı</div>
+                  <div class="list-item-sub">₺1,240.00</div>
+                </div>
+                <div class="list-item-right">
+                  <div class="list-item-val">₺1,240</div>
+                  <div class="list-item-time">1 sa</div>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="avatar av-forest" style="width:28px;height:28px;font-size:.65rem">ST</div>
+                <div class="list-item-info">
+                  <div class="list-item-title">Stok güncellendi</div>
+                  <div class="list-item-sub">Ürün #PRD-091</div>
+                </div>
+                <div class="list-item-right">
+                  <div class="list-item-time">3 sa</div>
+                  <span class="badge badge-amber" style="font-size:.62rem">Düşük</span>
+                </div>
+              </div>
+              <div class="list-item">
+                <div class="avatar" style="background:var(--coral);width:28px;height:28px;font-size:.65rem">AY</div>
+                <div class="list-item-info">
+                  <div class="list-item-title">Sipariş iptal edildi</div>
+                  <div class="list-item-sub">#ORD-2833</div>
+                </div>
+                <div class="list-item-right">
+                  <div class="list-item-time">5 sa</div>
+                  <span class="badge badge-coral" style="font-size:.62rem">İptal</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- İkinci panel satırı -->
+      <div class="c-row">
+        <!-- Tablo paneli -->
+        <div class="c-col-3">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fas fa-list"></i> Son Siparişler</div>
+              <div class="panel-actions">
+                <button class="btn btn-ghost btn-sm"><i class="fas fa-filter"></i></button>
+                <button class="btn btn-navy btn-sm">Tümünü Gör</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="ptable">
+                <thead>
+                  <tr>
+                    <th>Sipariş</th><th>Müşteri</th><th>Tutar</th><th>Durum</th><th>Tarih</th><th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight:700;color:var(--navy-mid)">#2841</td>
+                    <td><div style="display:flex;align-items:center;gap:.4rem"><div class="avatar av-navy" style="width:22px;height:22px;font-size:.6rem">FK</div>Fatma K.</div></td>
+                    <td style="font-weight:700">₺840</td>
+                    <td><span class="badge badge-forest">Aktif</span></td>
+                    <td style="color:var(--steel-dark)">Bugün</td>
+                    <td><button class="btn btn-ghost btn-sm" style="padding:.2rem .5rem"><i class="fas fa-external-link-alt"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;color:var(--navy-mid)">#2840</td>
+                    <td><div style="display:flex;align-items:center;gap:.4rem"><div class="avatar av-amber" style="width:22px;height:22px;font-size:.6rem">MC</div>Mehmet Ç.</div></td>
+                    <td style="font-weight:700">₺1,240</td>
+                    <td><span class="badge badge-navy">İşlemde</span></td>
+                    <td style="color:var(--steel-dark)">Dün</td>
+                    <td><button class="btn btn-ghost btn-sm" style="padding:.2rem .5rem"><i class="fas fa-external-link-alt"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;color:var(--navy-mid)">#2839</td>
+                    <td><div style="display:flex;align-items:center;gap:.4rem"><div class="avatar av-forest" style="width:22px;height:22px;font-size:.6rem">ZD</div>Zeynep D.</div></td>
+                    <td style="font-weight:700">₺320</td>
+                    <td><span class="badge badge-amber">Bekliyor</span></td>
+                    <td style="color:var(--steel-dark)">12 Haz</td>
+                    <td><button class="btn btn-ghost btn-sm" style="padding:.2rem .5rem"><i class="fas fa-external-link-alt"></i></button></td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight:700;color:var(--navy-mid)">#2838</td>
+                    <td><div style="display:flex;align-items:center;gap:.4rem"><div class="avatar av-steel" style="width:22px;height:22px;font-size:.6rem">ST</div>Selin T.</div></td>
+                    <td style="font-weight:700">₺2,100</td>
+                    <td><span class="badge badge-coral">İptal</span></td>
+                    <td style="color:var(--steel-dark)">11 Haz</td>
+                    <td><button class="btn btn-ghost btn-sm" style="padding:.2rem .5rem"><i class="fas fa-external-link-alt"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel-footer" style="justify-content:space-between">
+              <span style="font-size:.74rem;color:var(--steel-dark)">Toplam 248 sipariş</span>
+              <div style="display:flex;gap:.3rem">
+                <button class="btn btn-ghost btn-sm" style="padding:.2rem .6rem"><i class="fas fa-chevron-left"></i></button>
+                <button class="btn btn-ghost btn-sm" style="padding:.2rem .6rem"><i class="fas fa-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skeleton panel -->
+        <div class="c-col">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fas fa-spinner fa-spin" style="color:var(--steel-dark)"></i> Yükleniyor...</div>
+            </div>
+            <div class="panel-body">
+              <div class="skel-avatar-row">
+                <div class="skel skel-circle"></div>
+                <div style="flex:1"><div class="skel skel-line w-3q"></div><div class="skel skel-line w-half"></div></div>
+              </div>
+              <div class="skel-avatar-row">
+                <div class="skel skel-circle"></div>
+                <div style="flex:1"><div class="skel skel-line w-full"></div><div class="skel skel-line w-1q"></div></div>
+              </div>
+              <div class="skel-avatar-row">
+                <div class="skel skel-circle"></div>
+                <div style="flex:1"><div class="skel skel-line w-3q"></div><div class="skel skel-line w-half"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-body -->
+  </main>
+
+  <!-- ═══ FOOTER ════════════════════════════════ -->
+  <footer class="app-footer">
+    <div class="footer-left">
+      <i class="fas fa-layer-group" style="color:var(--navy-mid)"></i>
+      <span style="font-weight:700;color:var(--navy-dark)">BrandUI</span>
+      <span class="footer-sep"></span>
+      <span>© 2025 Tüm hakları saklıdır.</span>
+    </div>
+    <div class="footer-center">
+      <a href="#" class="footer-link">Gizlilik Politikası</a>
+      <a href="#" class="footer-link">Kullanım Koşulları</a>
+      <a href="#" class="footer-link">Yardım Merkezi</a>
+    </div>
+    <div class="footer-right">
+      <div class="footer-status">
+        <span class="status-dot status-online"></span>
+        <span>Tüm sistemler çalışıyor</span>
+      </div>
+      <span class="footer-sep"></span>
+      <span>v2.4.1</span>
+    </div>
+  </footer>
+
+</div><!-- /app-shell -->
+
+<!-- Overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<script>
+  const shell    = document.getElementById('appShell');
+  const sidebar  = document.getElementById('appSidebar');
+  const overlay  = document.getElementById('sidebarOverlay');
+  let isMobile   = () => window.innerWidth <= 768;
+
+  function toggleSidebar() {
+    if (isMobile()) {
+      sidebar.classList.toggle('mobile-open');
+      overlay.classList.toggle('show');
+    } else {
+      shell.classList.toggle('sidebar-mini');
+    }
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('mobile-open');
+    overlay.classList.remove('show');
+  }
+
+  function toggleSubMenu(el) {
+    const sub = el.nextElementSibling;
+    if (!sub || !sub.classList.contains('nav-sub')) return;
+    el.classList.toggle('open');
+    sub.classList.toggle('open');
+  }
+
+  // Nav item click highlight
+  document.querySelectorAll('.app-sidebar .nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+      if (this.querySelector('.nav-arrow')) return; // submenu toggle, skip
+      document.querySelectorAll('.app-sidebar .nav-item').forEach(n => n.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

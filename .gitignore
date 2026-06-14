@@ -1,0 +1,47 @@
+# Genel
+.env
+*.env
+.env.local
+.env.production
+*.local
+
+# Server
+server/.env
+server/mywallet
+server/build/
+server/tmp/
+
+# Client
+client/node_modules/
+client/dist/
+client/.env
+client/.env.local
+
+# Node
+node_modules/
+
+# Go build artifacts
+*.exe
+*.test
+*.out
+/bin/
+
+# Veritabanı
+*.sqlite
+*.sqlite3
+*.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Loglar
+*.log
+logs/
+
+# OS
+Thumbs.db
