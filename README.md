@@ -14,7 +14,36 @@
 
 ## 📸 Screenshots
 
-> _Proje çalıştırıldığında ekran görüntüleri buraya eklenecek._
+
+<img width="1350" height="825" alt="image" src="https://github.com/user-attachments/assets/416777e2-149b-48b1-bd04-db79f8bdb76b" />
+
+---
+
+<img width="1917" height="920" alt="image" src="https://github.com/user-attachments/assets/ef61fe7c-acdd-4da5-bbbb-3bdb9f5c2cbb" />
+
+---
+
+<img width="1916" height="918" alt="image" src="https://github.com/user-attachments/assets/7226708d-5e26-4299-adb3-04877e3a0908" />
+
+
+<img width="1914" height="921" alt="image" src="https://github.com/user-attachments/assets/0007fba3-3d7c-4935-99f9-1148a361811d" />
+
+<img width="1915" height="921" alt="image" src="https://github.com/user-attachments/assets/28fb577a-2c5f-45c7-b30f-baa9517449d6" />
+
+<img width="1910" height="915" alt="image" src="https://github.com/user-attachments/assets/6d8b4443-2c16-4729-8e51-7ad577b04a52" />
+
+<img width="1901" height="918" alt="image" src="https://github.com/user-attachments/assets/4193a547-5371-408d-a68e-c0468ad38944" />
+
+<img width="1905" height="916" alt="image" src="https://github.com/user-attachments/assets/e752c30f-7d49-4d7b-82b9-386844e7dd07" />
+
+<img width="1918" height="923" alt="image" src="https://github.com/user-attachments/assets/719b2800-33ea-4348-a2b2-b29f7d498dc5" />
+
+<img width="1919" height="917" alt="image" src="https://github.com/user-attachments/assets/8a6b374e-0f11-4129-a5b2-cd4679cc5a24" />
+
+<img width="1918" height="917" alt="image" src="https://github.com/user-attachments/assets/095226c0-6f6a-424f-b2ae-0005497816d6" />
+
+
+<img width="1919" height="918" alt="image" src="https://github.com/user-attachments/assets/e11e360a-81c6-4e44-8c70-f1cff9143a9c" />
 
 ---
 
